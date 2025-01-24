@@ -1,21 +1,21 @@
-import Head from "next/head";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import { NextSeo } from "next-seo";
+import Head from 'next/head';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { NextSeo } from 'next-seo';
 
 export default function Contact() {
   return (
     <div className="text-black bg-black">
       <NextSeo
-        title="404: nine4"
-        description="404 page for all our missing pages"
-        canonical="https://nine4-3.vercel.app/404"
-        openGraph={{
-          url: "https://nine4-3.vercel.app/404",
-        }}
+        title="404: Flux Daily"
+        description="404 page for all missing pages"
+        // canonical="https://nine4-3.vercel.app/404"
+        // openGraph={{
+        //   url: "https://nine4-3.vercel.app/404",
+        // }}
       />
       <Head>
-        <title>nine4</title>
+        <title>Flux Daily</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />

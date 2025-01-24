@@ -2,14 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 @import url(//db.onlinewebfonts.com/c/e5c490a944bc2b2746f0c851501e46c7?family=AvenirNextW10-Bold);
-@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    Fira Sans,
+    Droid Sans,
+    Helvetica Neue,
+    sans-serif;
   background-color: #000000;
 }
 
@@ -27,18 +37,19 @@ a {
 }
 
 @font-face {
-  font-family: "AvenirNextW10-Bold";
-  src: url("//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.eot");
-  src: url("//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.eot?#iefix")
-      format("embedded-opentype"),
-    url("//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.woff2")
-      format("woff2"),
-    url("//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.woff")
-      format("woff"),
-    url("//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.ttf")
-      format("truetype"),
-    url("//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.svg#AvenirNextW10-Bold")
-      format("svg");
+  font-family: 'AvenirNextW10-Bold';
+  src: url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.eot');
+  src:
+    url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.eot?#iefix')
+      format('embedded-opentype'),
+    url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.woff2')
+      format('woff2'),
+    url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.woff')
+      format('woff'),
+    url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.ttf')
+      format('truetype'),
+    url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.svg#AvenirNextW10-Bold')
+      format('svg');
 }
 
 .Avenir {
@@ -64,6 +75,10 @@ a {
 
 .text-80 {
   font-size: 80px;
+}
+
+.text-70 {
+  font-size: 70px;
 }
 
 .font-4 {
@@ -92,11 +107,18 @@ a {
 }
 
 .ktq4 {
-  background-color: #101111;
+  /* background-color: rgba(16, 17, 17, 0.5);
   padding: 2rem;
+  border-radius: 10px; */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  color: #fff; /* Text color for readability */
 }
 
 .fkrr1 {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
 }
