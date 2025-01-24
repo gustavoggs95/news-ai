@@ -11,7 +11,14 @@ export default function Main() {
     }, []);
 
     return (
-      <video ref={videoRef} className="w-full h-auto" autoPlay loop muted>
+      <video
+        ref={videoRef}
+        className="w-full h-auto"
+        autoPlay
+        loop
+        muted
+        poster="./images/bg-video-poster.png"
+      >
         <source src="/videos/hero2.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>

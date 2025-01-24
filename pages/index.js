@@ -17,7 +17,7 @@ export default function Home() {
       />
       <Head>
         <title>Flux Daily</title>
-        <link rel="icon" href="/favicon.png" />
+        <link rel="icon" href="/images/flux-small.png" />
       </Head>
       <Header />
       <Main />
