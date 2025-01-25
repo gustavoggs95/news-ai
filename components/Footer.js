@@ -9,14 +9,14 @@ export default function Footer() {
                 href="/"
                 className="text-md text-gray-200 hover:text-white transition-colors duration-300 hover:text-deep-purple-accent-400 font-semibold"
               >
-                Copyright © 2025 Flux Daily. All rights reserved.
+                Copyright © 2025 Flux. All rights reserved.
               </span>
             </li>
           </ul>
           <ul className="flex flex-col mb-3 space-y-2 lg:mb-0 sm:space-y-0 sm:space-x-5 sm:flex-row pb-[5px]">
             <div className="flex flex-row items-center justify-between">
               <img
-                className="object-cover object-center w-8 h-8 shadow-md mt-1.5 mr-3"
+                className="object-cover object-center w-8 h-8 shadow-md mt-1 mr-3"
                 alt="Flux Logo"
                 src="./images/flux-png.png"
               />
@@ -24,7 +24,7 @@ export default function Footer() {
                 href="/"
                 className="flex text-3xl text-white font-medium mb-4 md:mb-0"
               >
-                Flux Daily
+                Flux
               </a>
               <button
                 className="text-white pb-4 cursor-pointer leading-none px-3 py-1 md:hidden outline-none focus:outline-none content-end ml-auto"

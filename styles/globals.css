@@ -100,6 +100,11 @@ a {
   grid-gap: 32px;
 }
 
+.rotate-card {
+  transform: rotateX(339deg) rotateY(341deg) rotateZ(349deg);
+  box-shadow: -20px 20px 17px -5px rgba(59, 130, 246, 0.2);
+}
+
 @media (min-width: 720px) {
   .fsac4 {
     grid-template-columns: repeat(2, 1fr);

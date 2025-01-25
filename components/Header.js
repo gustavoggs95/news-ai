@@ -18,7 +18,7 @@ export default function Header() {
             href="/"
             className="flex text-3xl text-white font-medium mb-4 md:mb-0"
           >
-            Flux Daily
+            Flux
           </a>
           <button
             className="text-white pb-4 cursor-pointer leading-none px-3 py-1 md:hidden outline-none focus:outline-none content-end ml-auto"

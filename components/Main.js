@@ -105,53 +105,20 @@ export default function Main() {
             </p>
           </div>
         </div>
-        <div className="pt-32 pb-32 max-w-6xl mx-auto fsac4 md:px-1 px-3">
-          <div className="ktq4">
-            <h3 className="font-semibold text-lg text-white">
-              O copinho eu quero te ver contente
-            </h3>
-            <p className="pt-2 value-text text-md text-gray-200 fkrr1">
-              Derramando bebida na sua mente <br />
-              Porque só o coração apaixonado sente <br />
-              Não abandona o piru da gente
-            </p>
-          </div>
-          <div className="ktq4">
-            <h3 className="font-semibold text-lg text-white">
-              O copinho eu quero te ver contente
-            </h3>
-            <p className="pt-2 value-text text-md text-gray-200 fkrr1">
-              Derramando bebida na sua mente <br />
-              Porque só o coração apaixonado sente <br />
-              Não abandona o piru da gente
-            </p>
+        <div className="mt-40 max-w-4xl mx-auto text-center mb-40 relative">
+          <h1 className="mb-5 text-6xl font-bold text-white">
+            Trade. Learn. Share.
+          </h1>
+          <h3 className="mb-16 text-2xl font-semibold text-gray-200 opacity-50">
+            Exchange ideas, gain knowledge and share the future of crypto
+          </h3>
+          <div className="h-[445px]">
+            <img
+              src="./images/test-card.png"
+              className="w-full rotate-card rounded-xl overflow-hidden absolute left-5"
+            />
           </div>
         </div>
-        <section className="relative pb-24">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-            <div className="py-24 md:py-36">
-              <h1 className="mb-5 text-6xl font-bold text-white">
-                Subscribe to our newsletter
-              </h1>
-              <h1 className="mb-9 text-2xl font-semibold text-gray-200">
-                Enter your email address and get our newsletters straight away.
-              </h1>
-              <input
-                type="email"
-                placeholder="satoshi@nakamoto.com"
-                name="email"
-                autoComplete="email"
-                className="border border-gray-600 w-1/4 pr-2 pl-2 py-3 mt-2 rounded-m font-semibold hover:border-gray-700 bg-black text-white"
-              />{' '}
-              <a
-                className="inline-flex items-center px-14 py-3 mt-2 ml-2 font-medium text-black transition duration-500 ease-in-out transform bg-transparent border rounded-lg bg-white"
-                href="/"
-              >
-                <span className="justify-center">Subscribe</span>
-              </a>
-            </div>
-          </div>
-        </section>
       </div>
     </section>
   );

@@ -7,7 +7,7 @@ export default function Contact() {
   return (
     <div className="text-black bg-black">
       <NextSeo
-        title="404: Flux Daily"
+        title="404: Flux"
         description="404 page for all missing pages"
         // canonical="https://nine4-3.vercel.app/404"
         // openGraph={{
@@ -15,7 +15,7 @@ export default function Contact() {
         // }}
       />
       <Head>
-        <title>Flux Daily</title>
+        <title>Flux</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
