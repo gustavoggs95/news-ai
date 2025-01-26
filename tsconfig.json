@@ -2,30 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@common/config": [
-        "src/config/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@views/*": [
-        "./src/views/*"
-      ],
-      "@assets/*": [
-        "./src/assets/*"
-      ],
-      "@images/*": [
-        "./public/images/*"
-      ],
-      "@/*": [
-        "./src/*"
-      ]
+      "@common/config": ["src/config/*"],
+      "@components/*": ["./src/components/*"],
+      "@views/*": ["./src/views/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@images/*": ["./public/images/*"],
+      "@/*": ["./src/*"]
     },
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -39,12 +23,6 @@
     "jsx": "preserve",
     "target": "ES2017"
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
