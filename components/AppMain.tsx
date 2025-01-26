@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-export default function Main() {
+export default function AppMain() {
   const VideoComponent = () => {
     const videoRef = useRef(null);
 
@@ -11,14 +11,7 @@ export default function Main() {
     }, []);
 
     return (
-      <video
-        ref={videoRef}
-        className="w-full h-auto"
-        autoPlay
-        loop
-        muted
-        poster="./images/bg-video-poster.png"
-      >
+      <video ref={videoRef} className="w-full h-auto" autoPlay loop muted poster="./images/bg-video-poster.png">
         <source src="/videos/hero2.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
@@ -33,12 +26,12 @@ export default function Main() {
       </div>
       <div className="z-10 relative">
         <div className="max-w-5xl pt-52 pb-24 mx-auto ">
-          <h1 className="text-[60px] text-center font-4 lh-6 ld-04 font-bold text-white mb-6">
+          <h1 className="sm:text-[60px] text-[40px] text-center font-4 lh-6 ld-04 font-bold text-white mb-6">
             AI-Driven Cryptocurrency News
           </h1>
           <h2 className="text-2xl font-4 font-semibold lh-6 ld-04 pb-11 text-gray-300 text-center">
-            Harness the Power of AI to Stay Ahead in Crypto: Real-Time News,
-            Market Trends, and Data-Driven Analysis at Your Fingertips
+            Harness the Power of AI to Stay Ahead in Crypto: Real-Time News, Market Trends, and Data-Driven Analysis at
+            Your Fingertips
           </h2>
           <div className="ml-6 text-center">
             <div className="relative inline-flex items-center cursor-pointer">
@@ -68,9 +61,8 @@ export default function Main() {
               Stay Ahead with Real-Time Crypto News
             </h3>
             <p className="pt-2 value-text text-md text-gray-200 fkrr1">
-              Use advanced AI to curate and deliver the latest and hottest
-              cryptocurrency news from Twitter, keeping you updated and informed
-              in real-time
+              Use advanced AI to curate and deliver the latest and hottest cryptocurrency news from Twitter, keeping you
+              updated and informed in real-time
             </p>
           </div>
           <div className="ktq4">
@@ -79,8 +71,8 @@ export default function Main() {
               Empowering Transactions with Flux Coin
             </h3>
             <p className="pt-2 value-text text-md text-gray-200 fkrr1">
-              Use Flux Coin to engage with exclusive news content, creating a
-              seamless and innovative way to connect with crypto trends
+              Use Flux Coin to engage with exclusive news content, creating a seamless and innovative way to connect
+              with crypto trends
             </p>
           </div>
           <div className="ktq4">
@@ -89,8 +81,8 @@ export default function Main() {
               AI-Driven Insights at Your Fingertips
             </h3>
             <p className="pt-2 value-text text-md text-gray-200 fkrr1">
-              Discover the power of AI to analyze and highlight critical market
-              shifts, empowering you to make smarter decisions
+              Discover the power of AI to analyze and highlight critical market shifts, empowering you to make smarter
+              decisions
             </p>
           </div>
           <div className="ktq4">
@@ -99,23 +91,20 @@ export default function Main() {
               Trade Flux News
             </h3>
             <p className="pt-2 value-text text-md text-gray-200 fkrr1">
-              Upload the latest and hottest cryptocurrency news and let others
-              discover it! Every time your news is purchased, you'll earn Flux
-              coins, turning your insights into real value.
+              Upload the latest and hottest cryptocurrency news and let others discover it! Every time your news is
+              purchased, you'll earn Flux coins, turning your insights into real value.
             </p>
           </div>
         </div>
         <div className="mt-40 max-w-4xl mx-auto text-center mb-40 relative">
-          <h1 className="mb-5 text-6xl font-bold text-white">
-            Trade. Learn. Share.
-          </h1>
+          <h1 className="mb-5 sm:text-[60px] text-[40px] font-bold text-white ">Trade. Learn. Share.</h1>
           <h3 className="mb-16 text-2xl font-semibold text-gray-200 opacity-50">
             Exchange ideas, gain knowledge and share the future of crypto
           </h3>
           <div className="h-[445px]">
             <img
               src="./images/test-card.png"
-              className="w-full rotate-card rounded-xl overflow-hidden absolute left-5"
+              className="w-full rotate-card rounded-xl overflow-hidden absolute sm:left-5"
             />
           </div>
         </div>

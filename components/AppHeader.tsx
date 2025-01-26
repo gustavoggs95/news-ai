@@ -1,9 +1,7 @@
-import React from 'react';
+import React from "react";
 
-export default function Header() {
+export default function AppHeader() {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
-  const [flyer, setFlyer] = React.useState(false);
-  const [flyerTwo, setFlyerTwo] = React.useState(false);
 
   return (
     <header className="fixed top-0 w-full clearNav z-50">
@@ -14,10 +12,7 @@ export default function Header() {
             alt="Flux Logo"
             src="./images/flux-png.png"
           />
-          <a
-            href="/"
-            className="flex text-3xl text-white font-medium mb-4 md:mb-0"
-          >
+          <a href="/" className="flex text-3xl text-white font-medium">
             Flux
           </a>
           <button
@@ -44,16 +39,9 @@ export default function Header() {
             </svg>
           </button>
         </div>
-        <div
-          className={
-            'md:flex flex-grow items-center' +
-            (navbarOpen ? ' flex' : ' hidden')
-          }
-        >
+        <div className={"md:flex flex-grow items-center" + (navbarOpen ? " flex" : " hidden")}>
           <div className="md:ml-auto md:mr-auto font-4 pt-1 md:pl-14 pl-1 flex flex-wrap items-center md:text-base text-1xl md:justify-center justify-items-start">
-            <a className="mr-11 pr-2 cursor-pointer text-gray-300 hover:text-white font-semibold tr04">
-              Features
-            </a>
+            <a className="mr-11 pr-2 cursor-pointer text-gray-300 hover:text-white font-semibold tr04">Features</a>
             {/* <div className="relative">
               <button
                 type="button"
@@ -137,16 +125,9 @@ export default function Header() {
             <a className="mr-12 md:ml-11 ml-0 cursor-pointer text-gray-300 hover:text-white font-semibold tr04">
               Pricing
             </a>
-            <a className="mr-12 md:ml-11 cursor-pointer text-gray-300 hover:text-white font-semibold tr04">
-              Careers
-            </a>
+            <a className="mr-12 md:ml-11 cursor-pointer text-gray-300 hover:text-white font-semibold tr04">Careers</a>
           </div>
-          <a
-            href="https://x.com/"
-            rel="noopener noreferrer"
-            target="_blank"
-            className="invisible md:visible mr-6"
-          >
+          <a href="https://x.com/" rel="noopener noreferrer" target="_blank" className="invisible md:visible mr-6">
             <img src="/images/x.svg" className="w-6 h-6 cursor-pointer" />
           </a>
           <a

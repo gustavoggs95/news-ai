@@ -1,7 +1,7 @@
-import Head from 'next/head';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import { NextSeo } from 'next-seo';
+import { NextSeo } from "next-seo";
+import Head from "next/head";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 export default function Contact() {
   return (
@@ -20,9 +20,7 @@ export default function Contact() {
       </Head>
       <Header />
       <div className="flex flex-col justify-center mx-auto mt-52 text-center max-w-2x1">
-        <h1 className="text-3xl font-bold tracking-tight text-white md:text-5xl">
-          404 – Unavailable
-        </h1>
+        <h1 className="text-3xl font-bold tracking-tight text-white md:text-5xl">404 – Unavailable</h1>
         <br />
         <a
           className="w-64 p-1 mx-auto font-bold text-center text-white border border-gray-500 rounded-lg sm:p-4"

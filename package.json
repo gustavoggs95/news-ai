@@ -2,6 +2,11 @@
   "name": "flux",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "exports": {
+    "import": "./index.mjs",
+    "require": "./index.cjs"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -20,6 +25,20 @@
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
-    "prettier": "^3.4.2"
+    "@eslint/js": "^9.19.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.1",
+    "@types/node": "^22.10.10",
+    "@types/react": "^19.0.8",
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
+    "eslint": "^9.19.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.21.0"
   }
 }
