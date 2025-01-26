@@ -1,8 +1,8 @@
+@import url("https://db.onlinewebfonts.com/c/e5c490a944bc2b2746f0c851501e46c7?family=AvenirNextW10-Bold");
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url(//db.onlinewebfonts.com/c/e5c490a944bc2b2746f0c851501e46c7?family=AvenirNextW10-Bold);
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
 html,
 body {
@@ -37,19 +37,14 @@ a {
 }
 
 @font-face {
-  font-family: 'AvenirNextW10-Bold';
-  src: url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.eot');
+  font-family: "AvenirNextW10-Bold";
+  src: url("https://db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.eot");
   src:
-    url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.eot?#iefix')
-      format('embedded-opentype'),
-    url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.woff2')
-      format('woff2'),
-    url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.woff')
-      format('woff'),
-    url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.ttf')
-      format('truetype'),
-    url('//db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.svg#AvenirNextW10-Bold')
-      format('svg');
+    url("https://db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.eot?#iefix") format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.woff2") format("woff2"),
+    url("https://db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.woff") format("woff"),
+    url("https://db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.ttf") format("truetype"),
+    url("https://db.onlinewebfonts.com/t/e5c490a944bc2b2746f0c851501e46c7.svg#AvenirNextW10-Bold") format("svg");
 }
 
 .Avenir {
@@ -125,5 +120,5 @@ a {
 }
 
 .fkrr1 {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }

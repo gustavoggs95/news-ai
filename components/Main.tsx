@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { useRouter } from "next/router";
 
 const Main: React.FC = () => {
   const VideoComponent: React.FC = () => {
@@ -17,6 +18,8 @@ const Main: React.FC = () => {
       </video>
     );
   };
+
+  const route = useRouter();
   return (
     <section className="text-gray-600 body-font">
       <div className="center absolute z-0 w-full">
@@ -34,11 +37,8 @@ const Main: React.FC = () => {
             Your Fingertips
           </h2>
           <div className="ml-6 text-center">
-            <div className="relative inline-flex items-center cursor-pointer">
-              <a
-                className="inline-flex items-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-800 px-14 py-3 font-semibold tracking-tighter text-white transition-transform duration-1000 ease-in-out transform hover:scale-105 focus:shadow-outline"
-                href="/"
-              >
+            <div className="relative inline-flex items-center cursor-pointer" onClick={() => route.push("/app")}>
+              <a className="inline-flex items-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-800 px-14 py-3 font-semibold tracking-tighter text-white transition-transform duration-1000 ease-in-out transform hover:scale-105 focus:shadow-outline">
                 <div className="flex text-lg">
                   <span className="justify-center">Get Started</span>
                 </div>

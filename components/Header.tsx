@@ -1,7 +1,9 @@
 import React from "react";
+import { useRouter } from "next/router";
 
 export default function Header() {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
+  const router = useRouter();
 
   return (
     <header className="fixed top-0 w-full clearNav z-50">
@@ -41,7 +43,12 @@ export default function Header() {
         </div>
         <div className={"md:flex flex-grow items-center" + (navbarOpen ? " flex" : " hidden")}>
           <div className="md:ml-auto md:mr-auto font-4 pt-1 md:pl-14 pl-1 flex flex-wrap items-center md:text-base text-1xl md:justify-center justify-items-start">
-            <a className="mr-11 pr-2 cursor-pointer text-gray-300 hover:text-white font-semibold tr04">Features</a>
+            <a
+              onClick={() => router.push("/app")}
+              className="mr-11 pr-2 cursor-pointer text-gray-300 hover:text-white font-semibold tr04"
+            >
+              App
+            </a>
             {/* <div className="relative">
               <button
                 type="button"
@@ -139,7 +146,7 @@ export default function Header() {
             <img src="/images/discord.svg" className="w-6 h-6 cursor-pointer" />
           </a>
           <div className="text-center">
-            <div className="relative inline-flex items-center cursor-pointer">
+            <div className="relative inline-flex items-center cursor-pointer" onClick={() => router.push("/app")}>
               <a
                 className="inline-flex items-center rounded-lg bg-gradient-to-r bg-white px-6 py-1 font-semibold tracking-tighter text-gray-700 transition-transform ease-in-out transform hover:scale-105 focus:shadow-outline"
                 href="/"

@@ -15,8 +15,8 @@ export default function Contact() {
         // }}
       />
       <Head>
-        <title>Flux</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title key="title">Flux</title>
+        <link key="icon" rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
       <div className="flex flex-col justify-center mx-auto mt-52 text-center max-w-2x1">
