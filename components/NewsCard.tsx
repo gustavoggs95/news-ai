@@ -1,5 +1,6 @@
 import { BiCommentDetail, BiUpvote } from "react-icons/bi";
 import { BsFire } from "react-icons/bs";
+import { IoMdLock } from "react-icons/io";
 import { CardRank, NewsCardProps } from "config/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -25,19 +26,28 @@ export default function NewsCard({ newsData: { publishedAt, rank, src, title, lo
     <div className="rounded-md bg-slate-800 p-3 flex flex-col">
       <div className="flex justify-between items-center">
         <div className={`rounded-md w-fit px-2 ${getRankColor(rank)}`}>{rank}</div>
-        {isHot ? (
-          <Tooltip text="HOT NEWS!">
-            <BsFire className="text-red-400" size={20} />
-          </Tooltip>
-        ) : (
-          <div />
-        )}
+        <div className="flex items-center">
+          {isHot ? (
+            <Tooltip text="Hot News!">
+              <BsFire className="text-red-400" size={20} />
+            </Tooltip>
+          ) : (
+            <div />
+          )}
+          {locked ? (
+            <Tooltip text="Locked">
+              <IoMdLock className="text-gray-200" size={22} />
+            </Tooltip>
+          ) : (
+            <div />
+          )}
+        </div>
       </div>
       <h1 className={`font-bold my-3 flex-grow ${locked && "blur-md"}`}>{title}</h1>
 
-      <div className="relative w-full h-48 overflow-hidden rounded-md cursor-pointer hover:opacity-80 transition-opacity group">
+      <div className="relative w-full h-48 overflow-hidden rounded-md cursor-pointer hover:opacity-80 transition-opacity">
         {locked && (
-          <div className="shiny font-semibold justify-center items-center flex flex-col bg-black/30 absolute w-full h-full opacity-0 group-hover:opacity-100 transition-opacity z-10">
+          <div className="shiny font-semibold justify-center items-center flex flex-col bg-black/30 absolute w-full h-full transition-opacity z-10">
             <div className="flex items-center">
               <img className="h-6 w-6 mr-2" src="/images/flux-small.png" />
               <span>34.99</span>
