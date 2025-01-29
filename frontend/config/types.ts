@@ -1,6 +1,12 @@
+// export interface NewsCardProps {
+//   index?: number | string;
+//   newsData: NewsData;
+// }
+import { NewsType } from "types/supabase";
+
 export interface NewsCardProps {
   index?: number | string;
-  newsData: NewsData;
+  newsData: NewsType;
 }
 
 export interface NewsData {

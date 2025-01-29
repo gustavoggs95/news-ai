@@ -8,7 +8,8 @@ import Tooltip from "./Tooltip";
 
 dayjs.extend(relativeTime);
 
-export default function NewsCard({ newsData: { publishedAt, rank, src, title, locked } }: NewsCardProps) {
+export default function NewsCard({ newsData }: NewsCardProps) {
+  const { created_at, locked, rank, title, url } = newsData;
   const getRankColor = (rank: CardRank) => {
     const rankColors: Record<CardRank, string> = {
       [CardRank.Basic]: "bg-green-800",
@@ -20,12 +21,12 @@ export default function NewsCard({ newsData: { publishedAt, rank, src, title, lo
     return rankColors[rank] || "bg-gray-800";
   };
 
-  const isHot = dayjs().diff(publishedAt, "minute") < 30;
+  const isHot = dayjs().diff(created_at, "minute") < 30;
 
   return (
     <div className="rounded-md bg-slate-800 p-3 flex flex-col">
       <div className="flex justify-between items-center">
-        <div className={`rounded-md w-fit px-2 ${getRankColor(rank)}`}>{rank}</div>
+        <div className={`rounded-md w-fit px-2 ${getRankColor(rank as CardRank)}`}>{rank}</div>
         <div className="flex items-center">
           {isHot ? (
             <Tooltip text="Hot News!">
@@ -46,6 +47,7 @@ export default function NewsCard({ newsData: { publishedAt, rank, src, title, lo
       <h1 className={`font-bold my-3 flex-grow ${locked && "blur-md"}`}>{title}</h1>
 
       <div className="relative w-full h-48 overflow-hidden rounded-md cursor-pointer hover:opacity-80 transition-opacity">
+        {/* 🔒 LOCKED */}
         {locked && (
           <div className="shiny font-semibold justify-center items-center flex flex-col bg-black/30 absolute w-full h-full transition-opacity z-10">
             <div className="flex items-center">
@@ -56,7 +58,11 @@ export default function NewsCard({ newsData: { publishedAt, rank, src, title, lo
           </div>
         )}
 
-        <img src={src} alt={title} className={`absolute inset-0 w-full h-full object-cover ${locked && "blur-md"}`} />
+        <img
+          src={url || undefined}
+          alt={title}
+          className={`absolute inset-0 w-full h-full object-cover ${locked && "blur-md"}`}
+        />
       </div>
       <div className="flex mt-3 justify-between items-center">
         <div className="flex">
@@ -66,12 +72,12 @@ export default function NewsCard({ newsData: { publishedAt, rank, src, title, lo
             </div>
           </Tooltip>
           <Tooltip text="Comments">
-            <div className="mr-2 bg-white/10 rounded-md px-2 py-1 flex items-center cursor-pointer hover:bg-blue-800 hover:text-blue-200 text-slate-300 transition-colors">
+            <div className="mr-2 bg-white/10 rounded-md px-2 pb-[.200rem] pt-[.300rem] flex items-center cursor-pointer hover:bg-blue-800 hover:text-blue-200 text-slate-300 transition-colors">
               <BiCommentDetail size={20} />
             </div>
           </Tooltip>
         </div>
-        <div className="text-gray-300">{dayjs(publishedAt).fromNow()}</div>
+        <div className="text-gray-300">{dayjs(created_at).fromNow()}</div>
       </div>
     </div>
   );

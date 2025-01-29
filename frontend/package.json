@@ -1,0 +1,57 @@
+{
+  "name": "flux",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "import": "./index.mjs",
+    "require": "./index.cjs"
+  },
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "prettier:check": "prettier --check .",
+    "prettier:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.48.1",
+    "autoprefixer": "^10.2.3",
+    "dayjs": "^1.11.13",
+    "eslint-config-next": "^15.1.6",
+    "next": "^15.1.6",
+    "next-seo": "^4.18.0",
+    "npm": "^6.14.11",
+    "postcss": "^8.2.4",
+    "react": "^19.0.0",
+    "react-countup": "^4.3.3",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
+    "react-modal": "^3.16.3",
+    "react-visibility-sensor": "^5.1.1",
+    "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.1",
+    "@types/node": "^22.10.10",
+    "@types/react": "19.0.8",
+    "@types/react-modal": "^3.16.3",
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
+    "eslint": "^9.19.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "prettier": "^3.4.2",
+    "supabase": "^2.9.6",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.21.0"
+  },
+  "overrides": {
+    "@types/react": "19.0.8"
+  }
+}

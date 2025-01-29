@@ -6,8 +6,8 @@ export default function AppHeader() {
   const router = useRouter();
 
   return (
-    <header className="fixed top-0 w-full clearNav z-50">
-      <div className="max-w-5xl mx-auto flex flex-wrap p-5 flex-col md:flex-row">
+    <header className="w-full clearNav z-50 h-[70px]">
+      <div className="max-w-5xl mx-auto flex flex-wrap p-2 flex-col md:flex-row">
         <div className="flex flex-row items-center justify-between p-3 md:p-1">
           <img
             className="object-cover object-center w-8 h-8 shadow-md mt-1.5 mr-3"
