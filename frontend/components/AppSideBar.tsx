@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FaHistory, FaPlus } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import Modal from "react-modal";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import CreateNews from "./CreateNews";
 
 const customStyles: Modal.Styles = {
@@ -36,12 +38,12 @@ export default function AppSideBar() {
 
   return (
     <div className="h-full border-r border-white/20 text-white flex flex-col">
+      <ToastContainer theme="dark" />
       <Modal
         isOpen={isModalOpen}
-        // onAfterOpen={afterOpenModal}
         onRequestClose={() => setIsModalOpen(false)}
         style={customStyles}
-        contentLabel="Example Modal"
+        contentLabel="News Modal"
         closeTimeoutMS={250}
       >
         <div className="flex justify-between items-center p-4">
@@ -53,7 +55,7 @@ export default function AppSideBar() {
             onClick={() => setIsModalOpen(false)}
           />
         </div>
-        <CreateNews />
+        <CreateNews onClose={() => setIsModalOpen(false)} />
       </Modal>
       <div className="p-4 text-lg font-bold text-white/50">Menu</div>
       <ul className="flex-grow">

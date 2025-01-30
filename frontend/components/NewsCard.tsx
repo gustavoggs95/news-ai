@@ -9,7 +9,7 @@ import Tooltip from "./Tooltip";
 dayjs.extend(relativeTime);
 
 export default function NewsCard({ newsData }: NewsCardProps) {
-  const { created_at, locked, rank, title, url } = newsData;
+  const { created_at, locked, rank, title, thumbnail_url } = newsData;
   const getRankColor = (rank: CardRank) => {
     const rankColors: Record<CardRank, string> = {
       [CardRank.Basic]: "bg-green-800",
@@ -44,7 +44,7 @@ export default function NewsCard({ newsData }: NewsCardProps) {
           )}
         </div>
       </div>
-      <h1 className={`font-bold my-3 flex-grow ${locked && "blur-md"}`}>{title}</h1>
+      <h1 className={`font-bold my-3 flex-grow line-clamp-3 ${locked && "blur-md"}`}>{title}</h1>
 
       <div className="relative w-full h-48 overflow-hidden rounded-md cursor-pointer hover:opacity-80 transition-opacity">
         {/* 🔒 LOCKED */}
@@ -59,7 +59,7 @@ export default function NewsCard({ newsData }: NewsCardProps) {
         )}
 
         <img
-          src={url || undefined}
+          src={thumbnail_url || undefined}
           alt={title}
           className={`absolute inset-0 w-full h-full object-cover ${locked && "blur-md"}`}
         />

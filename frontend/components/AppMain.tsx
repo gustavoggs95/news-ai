@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { CardRank, NewsData } from "config/types";
 import { NewsType } from "types/supabase";
-import { createClient } from "utils/supabase/client";
 import AppSideBar from "./AppSideBar";
 import NewsCard from "./NewsCard";
+import SkeletonCard from "./SkeletonCard";
+
+// Import the SkeletonCard component
 
 const minutesAgo = (minutes: number) => new Date(Date.now() - minutes * 60000);
 
@@ -44,29 +47,34 @@ const mockCardsData: NewsData[] = [
 
 export default function AppMain() {
   const [news, setNews] = useState<NewsType[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const supabase = createClient();
-      const { data } = await supabase.from("news").select("*");
-
-      console.log("news", data);
-      setNews(data || []);
+    const fetchNews = async () => {
+      try {
+        const res = await axios.get("/api/news");
+        setNews(res.data);
+      } catch (error) {
+        console.log("Error fetching news:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchData();
+    fetchNews();
   }, []);
+
   return (
     <div className="flex h-[calc(100vh-70px)]">
       <div className="w-64 hidden md:block">
         <AppSideBar />
       </div>
       <div className="flex-grow p-4">
-        <div className="text-white body-font mt-[120px] max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {news.map((newsData, index) => (
-              <NewsCard key={index} newsData={newsData} />
-            ))}
+        <div className="text-white body-font mt-10 max-w-8xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {loading
+              ? Array.from({ length: 8 }).map((_, index) => <SkeletonCard key={index} />)
+              : news.map((newsData, index) => <NewsCard key={index} newsData={newsData} />)}
           </div>
         </div>
       </div>

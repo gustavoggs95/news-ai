@@ -51,6 +51,7 @@ export type Database = {
           rank: string;
           title: string;
           url: string | null;
+          thumbnail_url: string | null;
         };
         Insert: {
           content?: string | null;
@@ -60,6 +61,7 @@ export type Database = {
           rank: string;
           title: string;
           url?: string | null;
+          thumbnail_url: string | null;
         };
         Update: {
           content?: string | null;
@@ -69,6 +71,7 @@ export type Database = {
           rank?: string;
           title?: string;
           url?: string | null;
+          thumbnail_url: string | null;
         };
         Relationships: [];
       };

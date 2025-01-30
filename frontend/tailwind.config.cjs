@@ -3,6 +3,10 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      maxWidth: {
+        "8xl": "90rem",
+        "9xl": "100rem",
+      },
       colors: {
         gray: {
           100: "#FBFBFB",
@@ -15,6 +19,11 @@ module.exports = {
           800: "#121212",
           900: "#191919",
         },
+        "slate-450": "#8191a0",
+        "slate-475": "#728293",
+        "flux-input-400": "#1f252d",
+        "flux-input-500": "#1a1f26",
+        "flux-input-600": "#14181e",
       },
     },
   },
