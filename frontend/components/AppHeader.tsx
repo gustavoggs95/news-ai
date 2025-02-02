@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import SingleFlowSignIn from "./SingleFlowSignIn";
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
+
+const SingleFlowSignIn = dynamic(() => import("./SingleFlowSignIn"), { ssr: false });
 
 export default function AppHeader() {
   const [navbarOpen, setNavbarOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 w-full clearNav z-50 h-[70px]">
@@ -47,8 +44,8 @@ export default function AppHeader() {
             </svg>
           </button>
         </div>
-        <div className={"md:flex items-center" + (navbarOpen ? " flex" : " hidden")}>
-          {isClient && <SingleFlowSignIn />}
+        <div className={"md:flex items-center"}>
+          <SingleFlowSignIn />
         </div>
       </div>
     </header>

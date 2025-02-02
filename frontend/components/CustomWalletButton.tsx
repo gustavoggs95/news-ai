@@ -1,51 +1,87 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { IoChevronDownOutline } from "react-icons/io5";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-
-const walletMultiButtonStyle: React.CSSProperties = {
-  borderRadius: 30,
-};
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 const CustomWalletButton: React.FC = () => {
+  const { setVisible } = useWalletModal();
   const { publicKey, disconnect } = useWallet();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const handleDropdownToggle = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
 
   const handleDisconnect = () => {
     disconnect();
-    setDropdownOpen(false);
   };
 
-  const handleCustomAction = () => {
-    console.log("Custom action");
-    setDropdownOpen(false);
+  const handleCopyAddress = () => {
+    if (publicKey) {
+      navigator.clipboard.writeText(publicKey.toBase58());
+    }
+  };
+
+  const handleUserConfig = () => {
+    console.log("User Config");
   };
 
   return (
-    <div className="relative">
-      <WalletMultiButton onClick={handleDropdownToggle} style={walletMultiButtonStyle} />
-      {dropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-          <ul className="py-1">
-            <li
-              className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-              onClick={() => navigator.clipboard.writeText(publicKey?.toBase58() || "")}
-            >
-              Copy Address
-            </li>
-            <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={handleCustomAction}>
-              Custom Action
-            </li>
-            <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={handleDisconnect}>
-              Disconnect
-            </li>
-          </ul>
-        </div>
+    <div className="relative text-white">
+      {publicKey ? (
+        <Menu as="div" className="relative inline-block text-left">
+          <div>
+            <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50">
+              Options
+              <IoChevronDownOutline aria-hidden="true" className="-mr-1 size-5 text-gray-400" />
+            </MenuButton>
+          </div>
+
+          <MenuItems
+            transition
+            className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+          >
+            <div className="py-1">
+              <MenuItem>
+                <a
+                  onClick={handleCopyAddress}
+                  href="#"
+                  className="hover:bg-black block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                >
+                  Copy Address
+                </a>
+              </MenuItem>
+              <MenuItem>
+                <a
+                  onClick={() => setVisible(true)}
+                  href="#"
+                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                >
+                  Switch Wallet
+                </a>
+              </MenuItem>
+              <MenuItem>
+                <a
+                  onClick={handleDisconnect}
+                  href="#"
+                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                >
+                  Disconnect
+                </a>
+              </MenuItem>
+              <MenuItem>
+                <button
+                  onClick={handleUserConfig}
+                  className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                >
+                  User Config
+                </button>
+              </MenuItem>
+            </div>
+          </MenuItems>
+        </Menu>
+      ) : (
+        <button onClick={() => setVisible(true)} className="rounded-full bg-blue-500 px-4 py-2">
+          Select Wallet
+        </button>
       )}
     </div>
   );

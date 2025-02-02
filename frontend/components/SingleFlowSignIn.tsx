@@ -168,12 +168,11 @@ export default function SingleFlowSignIn() {
   }, [publicKey, signMessage, disconnect]);
 
   useEffect(() => {
-    console.log("CONNECTANDO", { connected, hasSignedRefcurrent: hasSignedRef.current, isSignedIn });
     if (connected && !hasSignedRef.current && !isSignedIn) {
       hasSignedRef.current = true;
       const timer = setTimeout(() => {
         signInWithWallet().catch(() => {});
-      }, 1000);
+      }, 200);
 
       return () => clearTimeout(timer);
     }
