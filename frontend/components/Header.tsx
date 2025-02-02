@@ -9,11 +9,7 @@ export default function Header() {
     <header className="fixed top-0 w-full clearNav z-50">
       <div className="max-w-5xl mx-auto flex flex-wrap p-5 flex-col md:flex-row">
         <div className="flex flex-row items-center justify-between p-3 md:p-1">
-          <img
-            className="object-cover object-center w-8 h-8 shadow-md mt-1.5 mr-3"
-            alt="Flux Logo"
-            src="./images/flux-png.png"
-          />
+          <img className="object-center w-9 h-9 shadow-md mr-3" alt="Flux Logo" src="./images/flux-png.png" />
           <a href="/" className="flex text-3xl text-white font-medium">
             Flux
           </a>

@@ -49,19 +49,19 @@ export type Database = {
           id: number;
           locked: boolean | null;
           rank: string;
+          thumbnail_url: string | null;
           title: string;
           url: string | null;
-          thumbnail_url: string | null;
         };
         Insert: {
           content?: string | null;
           created_at?: string | null;
           id?: never;
           locked?: boolean | null;
-          rank: string;
+          rank?: string;
+          thumbnail_url?: string | null;
           title: string;
           url?: string | null;
-          thumbnail_url: string | null;
         };
         Update: {
           content?: string | null;
@@ -69,9 +69,9 @@ export type Database = {
           id?: never;
           locked?: boolean | null;
           rank?: string;
+          thumbnail_url?: string | null;
           title?: string;
           url?: string | null;
-          thumbnail_url: string | null;
         };
         Relationships: [];
       };
@@ -117,20 +117,23 @@ export type Database = {
       users: {
         Row: {
           created_at: string | null;
-          crypto_wallet_address: string;
           id: number;
+          public_key: string | null;
+          updated_at: string | null;
           username: string;
         };
         Insert: {
           created_at?: string | null;
-          crypto_wallet_address: string;
           id?: never;
+          public_key?: string | null;
+          updated_at?: string | null;
           username: string;
         };
         Update: {
           created_at?: string | null;
-          crypto_wallet_address?: string;
           id?: never;
+          public_key?: string | null;
+          updated_at?: string | null;
           username?: string;
         };
         Relationships: [];

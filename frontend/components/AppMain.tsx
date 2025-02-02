@@ -66,10 +66,10 @@ export default function AppMain() {
 
   return (
     <div className="flex h-[calc(100vh-70px)]">
-      <div className="w-64 hidden md:block">
+      <div className="w-64 hidden md:block mt-[70px]">
         <AppSideBar />
       </div>
-      <div className="flex-grow p-4">
+      <div className="flex-grow p-4 mt-[70px]">
         <div className="text-white body-font mt-10 max-w-8xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {loading

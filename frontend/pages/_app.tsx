@@ -1,3 +1,4 @@
+import AppWalletProvider from "components/AppWalletProvider";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import "../styles/globals.css";
@@ -9,7 +10,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>Flux</title>
         <link rel="icon" href="/images/flux-small.png" />
       </Head>
-      <Component {...pageProps} />
+      <AppWalletProvider>
+        <Component {...pageProps} />
+      </AppWalletProvider>
     </>
   );
 }

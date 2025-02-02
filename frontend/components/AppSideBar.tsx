@@ -37,7 +37,7 @@ export default function AppSideBar() {
   }, []);
 
   return (
-    <div className="h-full border-r border-white/20 text-white flex flex-col">
+    <div className="fixed w-64 h-full border-r border-white/20 text-white flex flex-col">
       <ToastContainer theme="dark" />
       <Modal
         isOpen={isModalOpen}
