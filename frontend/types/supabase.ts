@@ -118,22 +118,25 @@ export type Database = {
         Row: {
           created_at: string | null;
           id: number;
-          public_key: string | null;
+          public_address: string | null;
           updated_at: string | null;
-          username: string;
+          last_login: string | null;
+          username: string | null;
         };
         Insert: {
           created_at?: string | null;
           id?: never;
-          public_key?: string | null;
+          public_address?: string | null;
           updated_at?: string | null;
-          username: string;
+          last_login: string | null;
+          username?: string;
         };
         Update: {
           created_at?: string | null;
           id?: never;
-          public_key?: string | null;
+          public_address?: string | null;
           updated_at?: string | null;
+          last_login: string | null;
           username?: string;
         };
         Relationships: [];
@@ -451,6 +454,7 @@ export type CompositeTypes<
 
 export type NewsType = Database["public"]["Tables"]["news"]["Row"];
 export type UsersType = Database["public"]["Tables"]["users"]["Row"];
+export type UsersTypeUpdate = Database["public"]["Tables"]["users"]["Update"];
 export type CommentsType = Database["public"]["Tables"]["comments"]["Row"];
 export type TransactionsType = Database["public"]["Tables"]["transactions"]["Row"];
 export type VotesType = Database["public"]["Tables"]["votes"]["Row"];

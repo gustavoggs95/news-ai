@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { FaHistory, FaPlus } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import Modal from "react-modal";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CreateNews from "./CreateNews";
 
@@ -38,7 +37,6 @@ export default function AppSideBar() {
 
   return (
     <div className="fixed w-64 h-full border-r border-white/20 text-white flex flex-col">
-      <ToastContainer theme="dark" />
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}

@@ -1,14 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import bs58 from "bs58";
 import { jwtDecode } from "jwt-decode";
+import { useUserStore } from "store/userStores";
+import { AuthenticateResponse } from "types/api";
+import { UsersType } from "types/supabase";
 import CustomWalletButton from "./CustomWalletButton";
 
 export default function SingleFlowSignIn() {
   const { publicKey, signMessage, connected, disconnect, disconnecting } = useWallet();
+  const { login, isAuthenticated, logout, user } = useUserStore();
   const suppressErrorRef = useRef(false);
   const hasSignedRef = useRef(false);
-  const [isSignedIn, setIsSignedIn] = useState(false);
 
   const checkStoredToken = async () => {
     const token = localStorage.getItem("authToken");
@@ -24,12 +27,13 @@ export default function SingleFlowSignIn() {
         console.log("Token expired, removing.");
         localStorage.removeItem("authToken");
         disconnect();
-        setIsSignedIn(false);
+        logout();
         return;
       }
 
       // If token is valid, set authentication without calling the backend
-      setIsSignedIn(true);
+
+      login(user as UsersType);
 
       // 2 days in seconds
       if (exp - currentTime < 172800) {
@@ -38,7 +42,7 @@ export default function SingleFlowSignIn() {
     } catch (error) {
       console.log(`Invalid token format, removing. ${error}`);
       localStorage.removeItem("authToken");
-      setIsSignedIn(false);
+      logout();
     }
   };
 
@@ -58,7 +62,7 @@ export default function SingleFlowSignIn() {
         console.log("Token refreshed!");
       } else {
         localStorage.removeItem("authToken");
-        setIsSignedIn(false);
+        logout();
       }
     } catch (error) {
       console.log(`Failed to refresh token. ${error}`);
@@ -72,7 +76,7 @@ export default function SingleFlowSignIn() {
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
-      setIsSignedIn(true);
+      login(user);
       checkStoredToken();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,10 +85,10 @@ export default function SingleFlowSignIn() {
   useEffect(() => {
     if (disconnecting) {
       localStorage.removeItem("authToken");
-      setIsSignedIn(false);
+      logout();
       //hasSignedRef.current = true
     }
-  }, [disconnecting]);
+  }, [disconnecting, logout]);
 
   useEffect(() => {
     const originalConsoleError = console.error;
@@ -145,14 +149,15 @@ export default function SingleFlowSignIn() {
         }),
       });
 
-      const data = await res.json();
-      if (data.success) {
+      const { success, error, token, user: userResponse }: AuthenticateResponse = await res.json();
+      console.log({ success, error, token, user: userResponse });
+      if (success && token) {
         console.log("SETTING TOKEN");
-        localStorage.setItem("authToken", data.token);
-        setIsSignedIn(true);
+        localStorage.setItem("authToken", token);
+        login(userResponse || null);
         console.log("Authentication successful");
       } else {
-        console.log("Authentication failed:", data.error);
+        console.log("Authentication failed:", error);
       }
     } catch (error) {
       if (error instanceof Error && error.message.includes("rejected")) {
@@ -165,10 +170,11 @@ export default function SingleFlowSignIn() {
       suppressErrorRef.current = false;
       hasSignedRef.current = false;
     }
-  }, [publicKey, signMessage, disconnect]);
+  }, [publicKey, signMessage, login, disconnect]);
 
   useEffect(() => {
-    if (connected && !hasSignedRef.current && !isSignedIn) {
+    console.log("CONNECTED", { connected, current: hasSignedRef.current, isAuthenticated });
+    if (connected && !hasSignedRef.current && !isAuthenticated) {
       hasSignedRef.current = true;
       const timer = setTimeout(() => {
         signInWithWallet().catch(() => {});
@@ -176,7 +182,7 @@ export default function SingleFlowSignIn() {
 
       return () => clearTimeout(timer);
     }
-  }, [connected, signInWithWallet, isSignedIn]);
+  }, [connected, signInWithWallet, isAuthenticated]);
 
   return (
     <div>

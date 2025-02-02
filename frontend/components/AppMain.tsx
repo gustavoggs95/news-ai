@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import { CardRank, NewsData } from "config/types";
 import { NewsType } from "types/supabase";
@@ -66,6 +67,7 @@ export default function AppMain() {
 
   return (
     <div className="flex h-[calc(100vh-70px)]">
+      <ToastContainer theme="dark" />
       <div className="w-64 hidden md:block mt-[70px]">
         <AppSideBar />
       </div>

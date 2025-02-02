@@ -22,7 +22,8 @@
       "pages/*": ["pages/*"],
       "public/*": ["public/*"],
       "styles/*": ["styles/*"],
-      "utils/*": ["utils/*"]
+      "utils/*": ["utils/*"],
+      "store/*": ["store/*"]
     },
     "incremental": true
   },
