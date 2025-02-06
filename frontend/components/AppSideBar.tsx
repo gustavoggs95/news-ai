@@ -59,12 +59,12 @@ export default function AppSideBar() {
       <ul className="flex-grow">
         <li className="px-4 mb-4 flex items-center">
           <div className="relative flex cursor-pointer w-full" onClick={() => setIsModalOpen(true)}>
-            <a className="inline-flex justify-center items-center rounded-lg bg-gradient-to-r w-full from-blue-500 to-blue-800 px-2 py-2 font-semibold tracking-tighter text-white transition-transform duration-1000 ease-in-out transform hover:scale-105 focus:shadow-outline">
+            <button className="inline-flex justify-center items-center rounded-lg bg-gradient-to-r w-full from-blue-500 to-blue-800 px-2 py-2 font-semibold tracking-tighter text-white transition-transform duration-1000 ease-in-out transform hover:scale-105 focus:shadow-outline">
               <div className="flex text-lg items-center">
                 <FaPlus className="mr-2" size={16} />
                 <span className="justify-center">New post</span>
               </div>
-            </a>
+            </button>
             <div className="absolute inset-0 bg-black opacity-0 hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>
           </div>
         </li>

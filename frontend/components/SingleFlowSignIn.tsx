@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import bs58 from "bs58";
 import { jwtDecode } from "jwt-decode";
@@ -10,8 +10,10 @@ import CustomWalletButton from "./CustomWalletButton";
 export default function SingleFlowSignIn() {
   const { publicKey, signMessage, connected, disconnect, disconnecting } = useWallet();
   const { login, isAuthenticated, logout, user } = useUserStore();
+  const [authLoading, setAuthLoading] = useState(false);
   const suppressErrorRef = useRef(false);
   const hasSignedRef = useRef(false);
+  const previousPublicKey = useRef<string | null>(null);
 
   const checkStoredToken = async () => {
     const token = localStorage.getItem("authToken");
@@ -70,10 +72,6 @@ export default function SingleFlowSignIn() {
   };
 
   useEffect(() => {
-    console.log("publicKey", publicKey?.toString());
-  }, [publicKey]);
-
-  useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
       login(user);
@@ -107,7 +105,10 @@ export default function SingleFlowSignIn() {
     };
 
     console.error = (...args) => {
-      if (suppressErrorRef.current && args.some((a) => a.toString().includes("User rejected"))) {
+      if (
+        suppressErrorRef.current &&
+        args.some((a) => a.toString().includes(["User rejected", "Missing or invalid parameters"]))
+      ) {
         return;
       }
       originalConsoleError.apply(console, args);
@@ -125,7 +126,6 @@ export default function SingleFlowSignIn() {
   }, [disconnect]);
 
   const signInWithWallet = useCallback(async () => {
-    console.log("signInWithWallet...");
     suppressErrorRef.current = true;
     try {
       if (!publicKey || !signMessage) {
@@ -139,6 +139,7 @@ export default function SingleFlowSignIn() {
       const signatureBytes = await signMessage(encodedMessage);
       const signature = bs58.encode(signatureBytes);
 
+      setAuthLoading(true);
       const res = await fetch("/api/authenticate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -152,7 +153,6 @@ export default function SingleFlowSignIn() {
       const { success, error, token, user: userResponse }: AuthenticateResponse = await res.json();
       console.log({ success, error, token, user: userResponse });
       if (success && token) {
-        console.log("SETTING TOKEN");
         localStorage.setItem("authToken", token);
         login(userResponse || null);
         console.log("Authentication successful");
@@ -167,13 +167,13 @@ export default function SingleFlowSignIn() {
         console.error("Sign-in error:", error);
       }
     } finally {
+      setAuthLoading(false);
       suppressErrorRef.current = false;
       hasSignedRef.current = false;
     }
   }, [publicKey, signMessage, login, disconnect]);
 
   useEffect(() => {
-    console.log("CONNECTED", { connected, current: hasSignedRef.current, isAuthenticated });
     if (connected && !hasSignedRef.current && !isAuthenticated) {
       hasSignedRef.current = true;
       const timer = setTimeout(() => {
@@ -184,9 +184,34 @@ export default function SingleFlowSignIn() {
     }
   }, [connected, signInWithWallet, isAuthenticated]);
 
+  const handleAccountChange = useCallback(() => {
+    // Clear existing authentication
+    localStorage.removeItem("authToken");
+    logout();
+
+    // Reset signing flags
+    hasSignedRef.current = false;
+  }, [logout]);
+
+  // Add this useEffect to detect account changes
+  useEffect(() => {
+    if (publicKey && isAuthenticated) {
+      const currentKey = publicKey.toString();
+
+      // Check if public key has changed
+      if (previousPublicKey.current && previousPublicKey.current !== currentKey) {
+        console.log("Wallet account changed - requiring reauthentication");
+        handleAccountChange();
+      }
+
+      // Update previous public key reference
+      previousPublicKey.current = currentKey;
+    }
+  }, [publicKey, isAuthenticated, handleAccountChange]);
+
   return (
     <div>
-      <CustomWalletButton />
+      <CustomWalletButton authLoading={authLoading} />
     </div>
   );
 }

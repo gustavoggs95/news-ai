@@ -3,6 +3,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      screens: {
+        xxl: "1650px",
+      },
       maxWidth: {
         "8xl": "90rem",
         "9xl": "100rem",
@@ -21,6 +24,7 @@ module.exports = {
         },
         "slate-450": "#8191a0",
         "slate-475": "#728293",
+        "slate-750": "#293548",
         "flux-input-400": "#1f252d",
         "flux-input-500": "#1a1f26",
         "flux-input-600": "#14181e",

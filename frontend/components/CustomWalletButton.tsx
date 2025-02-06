@@ -11,8 +11,9 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { useModalStore } from "store/modalStore";
 import { useUserStore } from "store/userStores";
+import Loader from "./Loader";
 
-const CustomWalletButton: React.FC = () => {
+export default function CustomWalletButton({ authLoading }: { authLoading: boolean }) {
   const { setVisible } = useWalletModal();
   const { publicKey, disconnect } = useWallet();
   const { openProfileModal } = useModalStore();
@@ -37,6 +38,7 @@ const CustomWalletButton: React.FC = () => {
         <Menu as="div" className="relative inline-block text-left">
           <div>
             <MenuButton className="inline-flex w-full justify-center rounded-xl bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 font-semibold">
+              {authLoading && <Loader className="fill-white mt-0.5 mr-3 h-5 w-5" />}
               {walletUserLabel}
             </MenuButton>
           </div>
@@ -106,6 +108,4 @@ const CustomWalletButton: React.FC = () => {
       )}
     </div>
   );
-};
-
-export default CustomWalletButton;
+}

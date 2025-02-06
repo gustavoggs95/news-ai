@@ -21,7 +21,7 @@ export default function AppHeader() {
             alt="Flux Logo"
             src="./images/flux-png.png"
           />
-          <a href="/" className="flex text-3xl text-white font-medium">
+          <a href="/app" className="flex text-3xl text-white font-medium">
             Flux
           </a>
         </div>

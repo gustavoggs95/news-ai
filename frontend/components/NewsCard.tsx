@@ -4,29 +4,29 @@ import { IoMdLock } from "react-icons/io";
 import { CardRank, NewsCardProps } from "config/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useNewsStore } from "store/newsStore";
+import RankTag from "./RankTag";
 import Tooltip from "./Tooltip";
 
 dayjs.extend(relativeTime);
 
 export default function NewsCard({ newsData }: NewsCardProps) {
-  const { created_at, locked, rank, title, thumbnail_url } = newsData;
-  const getRankColor = (rank: CardRank) => {
-    const rankColors: Record<CardRank, string> = {
-      [CardRank.Basic]: "bg-green-800",
-      [CardRank.Intermediate]: "bg-yellow-700",
-      [CardRank.Advanced]: "bg-blue-800",
-      [CardRank.Elite]: "bg-purple-800",
-      [CardRank.Legendary]: "bg-red-800",
-    };
-    return rankColors[rank] || "bg-gray-800";
+  const { created_at, locked, rank, title, thumbnail_url, icon_url } = newsData;
+  const { openNewsModal } = useNewsStore();
+
+  const isHot = dayjs().diff(created_at, "hour") < 24;
+
+  const handleUpvoteClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
   };
 
-  const isHot = dayjs().diff(created_at, "minute") < 30;
-
   return (
-    <div className="rounded-md bg-slate-800 p-3 flex flex-col">
+    <div
+      className="rounded-md bg-slate-800 p-3 flex flex-col cursor-pointer hover:bg-slate-750 transition-colors"
+      onClick={() => openNewsModal(newsData)}
+    >
       <div className="flex justify-between items-center">
-        <div className={`rounded-md w-fit px-2 ${getRankColor(rank as CardRank)}`}>{rank}</div>
+        <RankTag rank={rank as CardRank} />
         <div className="flex items-center">
           {isHot ? (
             <Tooltip text="Hot News!">
@@ -45,8 +45,9 @@ export default function NewsCard({ newsData }: NewsCardProps) {
         </div>
       </div>
       <h1 className={`font-bold my-3 flex-grow line-clamp-3 ${locked && "blur-md"}`}>{title}</h1>
-
-      <div className="relative w-full h-48 overflow-hidden rounded-md cursor-pointer hover:opacity-80 transition-opacity">
+      <div
+        className={`relative w-full h-48 overflow-hidden rounded-md transition-opacity ${!thumbnail_url ? "bg-white/10" : ""}`}
+      >
         {/* 🔒 LOCKED */}
         {locked && (
           <div className="shiny font-semibold justify-center items-center flex flex-col bg-black/30 absolute w-full h-full transition-opacity z-10">
@@ -59,15 +60,18 @@ export default function NewsCard({ newsData }: NewsCardProps) {
         )}
 
         <img
-          src={thumbnail_url || undefined}
+          src={thumbnail_url || icon_url || undefined}
           alt={title}
-          className={`absolute inset-0 w-full h-full object-cover ${locked && "blur-md"}`}
+          className={`absolute inset-0 ${thumbnail_url ? "w-full h-full" : "w-20 h-20"} object-center m-auto object-cover ${locked && "blur-md"}`}
         />
       </div>
       <div className="flex mt-3 justify-between items-center">
         <div className="flex">
           <Tooltip text="Upvote">
-            <div className="mr-2 bg-white/10 rounded-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors">
+            <div
+              onClick={handleUpvoteClick}
+              className="mr-2 bg-white/10 rounded-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors"
+            >
               <BiUpvote size={20} />
             </div>
           </Tooltip>

@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getLinkPreview } from "link-preview-js";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NewsType } from "types/supabase";
+import { authVerifier } from "utils/validators";
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -38,16 +39,24 @@ async function insertNews(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: "Missing required fields: URL" });
     }
 
+    authVerifier({ req, res });
+
     const preview = await getLinkPreview(url);
     console.log("preview", preview);
     const imagePreview = "images" in preview ? preview.images?.[0] : undefined;
     const newsTitle = "title" in preview ? preview.title : undefined;
+    const source = "siteName" in preview ? preview.siteName : undefined;
+    const content = "description" in preview ? preview.description : undefined;
+    const icon_url = "favicons" in preview ? preview.favicons?.[0] : undefined;
 
     const insertParameters: NewsType = {
       ...req.body,
       thumbnail_url: imagePreview,
       rank: "Basic",
       title: title || newsTitle,
+      source,
+      content,
+      icon_url,
     };
 
     const { data, error } = await supabase.from("news").insert([insertParameters]).select();

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
+import fluxApi from "config/axios";
 import { NewsType } from "types/supabase";
 import Loader from "./Loader";
 
@@ -14,7 +14,7 @@ export default function CreateNews({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("/api/news", newsData);
+      const res = await fluxApi.post("/api/news", newsData);
       toast.success("Post Created Successfully!");
       onClose();
       console.log("News Created:", res.data);

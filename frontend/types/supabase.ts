@@ -10,6 +10,7 @@ export type Database = {
           id: number;
           news_id: number | null;
           user_id: number | null;
+          parent_id: number | null;
         };
         Insert: {
           content: string;
@@ -17,6 +18,7 @@ export type Database = {
           id?: never;
           news_id?: number | null;
           user_id?: number | null;
+          parent_id?: number | null;
         };
         Update: {
           content?: string;
@@ -24,6 +26,7 @@ export type Database = {
           id?: never;
           news_id?: number | null;
           user_id?: number | null;
+          parent_id?: number | null;
         };
         Relationships: [
           {
@@ -52,6 +55,8 @@ export type Database = {
           thumbnail_url: string | null;
           title: string;
           url: string | null;
+          icon_url: string | null;
+          source: string | null;
         };
         Insert: {
           content?: string | null;
@@ -62,6 +67,8 @@ export type Database = {
           thumbnail_url?: string | null;
           title: string;
           url?: string | null;
+          icon_url?: string | null;
+          source?: string | null;
         };
         Update: {
           content?: string | null;
@@ -72,6 +79,8 @@ export type Database = {
           thumbnail_url?: string | null;
           title?: string;
           url?: string | null;
+          icon_url?: string | null;
+          source?: string | null;
         };
         Relationships: [];
       };

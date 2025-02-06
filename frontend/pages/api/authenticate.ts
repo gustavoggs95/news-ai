@@ -38,8 +38,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (error) {
       return res.status(500).json({ success: false });
     } else {
-      const token = jwt.sign({ publicKey }, JWT_SECRET, { expiresIn: "30d" });
       const user = data[0] as UsersType;
+      const token = jwt.sign({ publicKey, user_id: user.id }, JWT_SECRET, { expiresIn: "30d" });
       return res.status(200).json({ success: true, token, user });
     }
   } catch (error) {

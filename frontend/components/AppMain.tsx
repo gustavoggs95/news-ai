@@ -5,6 +5,7 @@ import { CardRank, NewsData } from "config/types";
 import { NewsType } from "types/supabase";
 import AppSideBar from "./AppSideBar";
 import NewsCard from "./NewsCard";
+import { NewsModal } from "./NewsModal";
 import SkeletonCard from "./SkeletonCard";
 
 // Import the SkeletonCard component
@@ -68,12 +69,13 @@ export default function AppMain() {
   return (
     <div className="flex h-[calc(100vh-70px)]">
       <ToastContainer theme="dark" />
+      <NewsModal />
       <div className="w-64 hidden md:block mt-[70px]">
         <AppSideBar />
       </div>
       <div className="flex-grow p-4 mt-[70px]">
-        <div className="text-white body-font mt-10 max-w-8xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="text-white body-font mt-10 max-w-2xl sm:max-w-2xl lg:max-w-3xl xl:max-w-6xl xxl:max-w-8xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 gap-6">
             {loading
               ? Array.from({ length: 8 }).map((_, index) => <SkeletonCard key={index} />)
               : news.map((newsData, index) => <NewsCard key={index} newsData={newsData} />)}
