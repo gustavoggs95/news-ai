@@ -67,6 +67,8 @@ export function ProfileModal() {
     }
   }
 
+  const fullKey = user?.public_address;
+
   return (
     <>
       <ReactModal
@@ -78,7 +80,7 @@ export function ProfileModal() {
       >
         <div className="flex justify-between items-center p-4">
           <div />
-          <h1 className="font-semibold text-white/80">Profile</h1>
+          <h1 className="font-semibold text-white/80 ml-[26px]">Profile</h1>
           <IoMdClose
             size={26}
             className="cursor-pointer text-white/80 hover:text-white transition-colors"
@@ -88,9 +90,13 @@ export function ProfileModal() {
         <div className="w-full p-4 mx-auto">
           <form onSubmit={updateUserRequest}>
             <div className="space-y-4 mb-10">
-              <div className="space-y-2 flex flex-col">
+              <div className="space-y-2 flex flex-col ">
+                <img
+                  className="h-24 w-24 rounded-full border-[0.5px] border-white/20 self-center mb-3"
+                  src={`https://robohash.org/${fullKey}`}
+                />
                 <label htmlFor="title" className="font-medium text-gray-300">
-                  Name <span className="font-thin text-gray-400">(Optional)</span>
+                  Name
                 </label>
                 <input
                   id="flux-name"

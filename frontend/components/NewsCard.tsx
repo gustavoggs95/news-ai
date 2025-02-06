@@ -1,6 +1,7 @@
-import { BiCommentDetail, BiUpvote } from "react-icons/bi";
+import { BiCommentDetail } from "react-icons/bi";
 import { BsFire } from "react-icons/bs";
 import { IoMdLock } from "react-icons/io";
+import { TbArrowBigDown, TbArrowBigUp } from "react-icons/tb";
 import { CardRank, NewsCardProps } from "config/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -67,14 +68,25 @@ export default function NewsCard({ newsData }: NewsCardProps) {
       </div>
       <div className="flex mt-3 justify-between items-center">
         <div className="flex">
-          <Tooltip text="Upvote">
-            <div
-              onClick={handleUpvoteClick}
-              className="mr-2 bg-white/10 rounded-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors"
-            >
-              <BiUpvote size={20} />
-            </div>
-          </Tooltip>
+          <div className="mr-2 bg-white/10 rounded-md flex">
+            <Tooltip text="Upvote">
+              <div
+                onClick={handleUpvoteClick}
+                className="rounded-l-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors"
+              >
+                <TbArrowBigUp size={20} />
+              </div>
+            </Tooltip>
+            <div className="h-full w-[1px] bg-white/10" />
+            <Tooltip text="Downvote">
+              <div
+                onClick={handleUpvoteClick}
+                className="rounded-r-md px-2 py-1 flex items-center cursor-pointer hover:bg-red-500/50 text-slate-300 hover:text-green-200 transition-colors"
+              >
+                <TbArrowBigDown size={20} />
+              </div>
+            </Tooltip>
+          </div>
           <Tooltip text="Comments">
             <div className="mr-2 bg-white/10 rounded-md px-2 pb-[.200rem] pt-[.300rem] flex items-center cursor-pointer hover:bg-blue-800 hover:text-blue-200 text-slate-300 transition-colors">
               <BiCommentDetail size={20} />

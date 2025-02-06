@@ -6,16 +6,26 @@ import { useUserStore } from "store/userStores";
 import { twMerge } from "tailwind-merge";
 import { AddCommentInput } from "types/api";
 import { CommentsType } from "types/supabase";
+import Comment from "./Comment";
+import CommentSkeleton from "./CommentSkeleton";
 import Loader from "./Loader";
 
 interface CommentData {
   text: string;
 }
 
+export interface CommentList extends CommentsType {
+  users: {
+    username: string;
+    public_address: string;
+  };
+}
+
 export default function CommentsSection() {
   const [commentData, setCommentData] = useState<CommentData>({ text: "" });
-  const [commentList, setCommentList] = useState<CommentsType[]>([]);
+  const [commentList, setCommentList] = useState<CommentList[]>([]);
   const [loadingSend, setLoadingSend] = useState(false);
+  const [loadingList, setLoadingList] = useState(false);
   const { news } = useNewsStore();
   const { user } = useUserStore();
 
@@ -33,7 +43,10 @@ export default function CommentsSection() {
       console.log("data", data);
       if (result.data.success) {
         setCommentData({ text: "" });
-        setCommentList([data.comment, ...commentList]);
+        setCommentList([
+          { ...data.comment, users: { username: user.username, public_address: user.public_address } },
+          ...commentList,
+        ]);
       }
       console.log("result data", result.data);
     } catch (error) {
@@ -47,12 +60,15 @@ export default function CommentsSection() {
     if (!news || !user) {
       return;
     }
+    setLoadingList(true);
     try {
       const result = await fluxApi.get(`/api/comments/list?news_id=${news.id}`);
       console.log("result data", result.data);
       setCommentList(result?.data?.comments || []);
     } catch (error) {
       console.log("error", (error as Error)?.message);
+    } finally {
+      setLoadingList(false);
     }
   };
 
@@ -101,18 +117,17 @@ export default function CommentsSection() {
           </button>
         </div>
       </form>
-      {commentList.length > 0 ? (
-        commentList?.map((comment, index) => (
-          <div key={index} className="rounded-lg border border-slate-700 mb-3 p-3">
-            <div>{comment.user_id}</div>
-            <div>{comment.content}</div>
+      <div className="space-y-3">
+        {loadingList ? (
+          <CommentSkeleton />
+        ) : commentList.length > 0 ? (
+          commentList?.map((comment, index) => <Comment comment={comment} index={index} />)
+        ) : (
+          <div className="text-gray-300 w-full flex justify-center items-center h-[118px]">
+            There's nothing here, be the first to comment.
           </div>
-        ))
-      ) : (
-        <div className="text-gray-300 w-full flex justify-center items-center h-20 mt-8">
-          There's nothing here, be the first to comment...
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

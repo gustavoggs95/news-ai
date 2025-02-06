@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   const { data, error } = await supabase
     .from("comments")
-    .select("*")
+    .select("*, users(username, public_address)")
     .eq("news_id", news_id)
     .order("created_at", { ascending: false });
 
@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 
   // Increment view count
-  const { error: viewError } = await supabase.rpc("increment_views", { x: 1, id: news_id });
+  const { error: viewError } = await supabase.rpc("increment_views", { _id: news_id });
 
   if (viewError) {
     return res.status(500).json({ success: false, error: viewError.message });

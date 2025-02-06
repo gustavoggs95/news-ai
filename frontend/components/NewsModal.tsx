@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { BsFire } from "react-icons/bs";
+import { FaEye } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { RxExternalLink } from "react-icons/rx";
+import { TbArrowBigDown, TbArrowBigUp } from "react-icons/tb";
 import ReactModal from "react-modal";
 import fluxApi from "config/axios";
 import { CardRank } from "config/types";
@@ -171,8 +174,30 @@ export function NewsModal() {
                   <span className="text-gray-300">{news.content}</span>
                 </div>
 
-                <div>
-                  <span className="text-gray-400">Posted {dayjs(news.created_at).fromNow()}</span>
+                <div className="flex space-x-5 text-gray-400">
+                  <div className="flex">
+                    <div className="bg-white/10 rounded-md flex">
+                      <Tooltip text="Upvote">
+                        <div className="rounded-l-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors">
+                          <span className="mr-1 font-semibold">19</span>
+                          <TbArrowBigUp size={20} />
+                        </div>
+                      </Tooltip>
+                      <div className="h-full w-[1px] bg-white/10" />
+                      <Tooltip text="Downvote">
+                        <div className="rounded-r-md h-full px-2 py-1 flex items-center cursor-pointer hover:bg-red-500/50 text-slate-300 hover:text-green-200 transition-colors">
+                          <TbArrowBigDown size={20} />
+                        </div>
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <span className="flex items-center">
+                    <FaEye size={20} className="mr-1 mt-0.5" />
+                    {news.views} views
+                  </span>
+                  <span className="flex items-center">
+                    <FaCalendarAlt size={18} className="mr-1 mt-0.5" /> {dayjs(news.created_at).fromNow()}
+                  </span>
                 </div>
                 <CommentsSection />
               </>

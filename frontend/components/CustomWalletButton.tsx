@@ -33,15 +33,17 @@ export default function CustomWalletButton({ authLoading }: { authLoading: boole
   const walletUserLabel = user?.username || minifiedKey;
 
   return (
-    <div className="relative text-white">
+    <div className="relative text-white flex items-center justify-center">
       {publicKey ? (
-        <Menu as="div" className="relative inline-block text-left">
-          <div>
-            <MenuButton className="inline-flex w-full justify-center rounded-xl bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 font-semibold">
-              {authLoading && <Loader className="fill-white mt-0.5 mr-3 h-5 w-5" />}
-              {walletUserLabel}
-            </MenuButton>
-          </div>
+        <Menu as="div" className="relative inline-block">
+          <MenuButton className="inline-flex w-full items-center justify-center rounded-xl h-12 bg-slate-800 hover:bg-slate-700 text-white px-6 py-1 font-semibold">
+            {authLoading && <Loader className="fill-white mt-0.5 mr-3 h-5 w-5" />}
+            {walletUserLabel}
+            <img
+              className="ml-3 h-8 w-8 rounded-full border-[0.5px] border-white/20"
+              src={`https://robohash.org/${publicKey.toBase58()}`}
+            />
+          </MenuButton>
 
           <Transition
             enter="transition ease-out duration-100"
@@ -100,7 +102,7 @@ export default function CustomWalletButton({ authLoading }: { authLoading: boole
       ) : (
         <div
           onClick={() => setVisible(true)}
-          className="flex w-full justify-center rounded-xl bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 font-semibold items-center cursor-pointer"
+          className="flex w-full justify-center rounded-xl bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 h-12 font-semibold items-center cursor-pointer"
         >
           <SiSolana className="mr-3 h-5 w-5" />
           Connect Wallet

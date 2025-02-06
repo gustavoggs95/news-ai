@@ -57,6 +57,7 @@ export type Database = {
           url: string | null;
           icon_url: string | null;
           source: string | null;
+          views: string | null;
         };
         Insert: {
           content?: string | null;
@@ -69,6 +70,7 @@ export type Database = {
           url?: string | null;
           icon_url?: string | null;
           source?: string | null;
+          views?: string | null;
         };
         Update: {
           content?: string | null;
@@ -81,6 +83,7 @@ export type Database = {
           url?: string | null;
           icon_url?: string | null;
           source?: string | null;
+          views?: string | null;
         };
         Relationships: [];
       };
