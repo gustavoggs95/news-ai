@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import NewsCard from "components/NewsCard";
+import SkeletonCard from "components/SkeletonCard";
 import fluxApi from "config/axios";
 import { GetNewsData, GetNewsResponse } from "types/api";
-import NewsCard from "./NewsCard";
-import SkeletonCard from "./SkeletonCard";
 
 // Import the SkeletonCard component
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { BsFire } from "react-icons/bs";
 import { FaEye } from "react-icons/fa";
@@ -10,7 +12,7 @@ import fluxApi from "config/axios";
 import { CardRank } from "config/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useRouter } from "next/router";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useNewsStore } from "store/newsStore";
 import { OneNewsResponse } from "types/api";
 import CommentsSection from "./CommentsSection";
@@ -49,37 +51,39 @@ dayjs.extend(relativeTime);
 
 export function NewsModal() {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Get the "news" query parameter
+  const routerNews = searchParams.get("news");
+
   const { news, isNewsModalOpen, isLoading, error, openNewsModal, closeNewsModal, setNews, setLoading, setError } =
     useNewsStore();
-  const pathName = router.pathname;
-  const routerNews = router.query.news;
 
-  // Handle URL synchronization
+  // Handle URL synchronization when the modal opens/closes.
   useEffect(() => {
     if (isNewsModalOpen && news) {
-      router.push(
-        {
-          pathname: pathName,
-          query: { ...router.query, news: news.id },
-        },
-        undefined,
-        { shallow: true },
-      );
-    } else if (!isNewsModalOpen && router.query.news) {
-      // Clean up URL when closing modal
-      router.push({ pathname: pathName, query: {} }, undefined, { shallow: true });
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+      newSearchParams.set("news", news.id);
+      router.push(`${pathname}?${newSearchParams.toString()}`);
+    } else if (!isNewsModalOpen && searchParams.has("news")) {
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+      newSearchParams.delete("news");
+      const queryString = newSearchParams.toString();
+      router.push(queryString ? `${pathname}?${queryString}` : pathname);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isNewsModalOpen, news, pathName]);
+  }, [isNewsModalOpen, news, pathname, searchParams]);
 
-  // Handle direct URL access with ?news=ID
+  // Handle direct URL access with ?news=ID (or ?id=ID on /post/ routes)
   useEffect(() => {
     const handleDirectAccess = async () => {
-      const newsId = routerNews || (router.pathname.includes("/post/") && router.query.id);
+      const routerId = searchParams.get("id");
+      const newsId = routerNews || (pathname.includes("/post/") && routerId);
       if (newsId && !isNewsModalOpen) {
         setLoading(true);
         try {
-          const response = await fluxApi.get(`/api/oneNews?id=${newsId}`);
+          const response = await fluxApi.get(`/api/news/getOne?id=${newsId}`);
           const data: OneNewsResponse = response.data;
           console.log("data", data);
 
@@ -99,14 +103,14 @@ export function NewsModal() {
     };
     handleDirectAccess();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routerNews]);
+  }, [routerNews, pathname, searchParams]);
 
   const handleClose = () => {
     closeNewsModal();
     setNews(null);
   };
 
-  const isHot = dayjs().diff(news?.created_at, "hour") < 24;
+  const isHot = news ? dayjs().diff(news.created_at, "hour") < 24 : false;
 
   return (
     <ReactModal
@@ -116,7 +120,7 @@ export function NewsModal() {
       contentLabel="News Modal"
       ariaHideApp={false}
     >
-      <div className=" overflow-hidden flex flex-col flex-1">
+      <div className="overflow-hidden flex flex-col flex-1">
         <div className="flex-1 overflow-auto">
           <div className="flex justify-between items-center p-4">
             <div />
@@ -140,7 +144,9 @@ export function NewsModal() {
                 <a
                   href={news.url || undefined}
                   target="_blank"
-                  className={`cursor-pointer relative w-full h-48 overflow-hidden flex rounded-lg ${!news.thumbnail_url ? "bg-white/10" : ""}`}
+                  className={`cursor-pointer relative w-full h-48 overflow-hidden flex rounded-lg ${
+                    !news.thumbnail_url ? "bg-white/10" : ""
+                  }`}
                 >
                   <div className="cursor-pointer transition-colors bg-black/20 absolute top-3 right-3 p-2 rounded-lg">
                     <RxExternalLink size={25} />
@@ -152,7 +158,7 @@ export function NewsModal() {
                   />
                   <div className="absolute w-full h-full hover:bg-white/10 transition-colors duration-75" />
                 </a>
-                <div className="flex  items-center justify-between">
+                <div className="flex items-center justify-between">
                   <RankTag className="py-1" rank={news.rank as CardRank} />
                   <div className="flex items-center space-x-3">
                     {isHot && (
@@ -176,7 +182,7 @@ export function NewsModal() {
 
                 <div className="flex space-x-5 text-gray-400">
                   <div className="flex">
-                    <div className="bg-white/10 rounded-md flex h-full ">
+                    <div className="bg-white/10 rounded-md flex h-full">
                       <Tooltip text="Upvote">
                         <div className="rounded-l-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors">
                           <span className="mr-1 font-semibold">19</span>

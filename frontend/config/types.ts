@@ -2,11 +2,12 @@
 //   index?: number | string;
 //   newsData: NewsData;
 // }
-import { NewsType } from "types/supabase";
+import { GetNewsData } from "types/api";
 
 export interface NewsCardProps {
   index?: number | string;
-  newsData: NewsType;
+  newsData: GetNewsData;
+  updateNews: (news: GetNewsData) => void;
 }
 
 export interface NewsData {

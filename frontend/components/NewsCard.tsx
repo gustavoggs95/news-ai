@@ -3,9 +3,11 @@ import { BiCommentDetail } from "react-icons/bi";
 import { BsFire } from "react-icons/bs";
 import { IoMdLock } from "react-icons/io";
 import { TbArrowBigDown, TbArrowBigUp } from "react-icons/tb";
+import { toast } from "react-toastify";
 import { createTransferCheckedInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
+import { AxiosError } from "axios";
 import fluxApi from "config/axios";
 import { CardRank, NewsCardProps } from "config/types";
 import dayjs from "dayjs";
@@ -16,8 +18,8 @@ import Tooltip from "./Tooltip";
 
 dayjs.extend(relativeTime);
 
-export default function NewsCard({ newsData }: NewsCardProps) {
-  const { created_at, locked, rank, title, thumbnail_url, icon_url } = newsData;
+export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
+  const { created_at, locked, rank, title, thumbnail_url, icon_url, is_purchased, price } = newsData;
   const { openNewsModal } = useNewsStore();
 
   const { publicKey, sendTransaction } = useWallet();
@@ -94,22 +96,29 @@ export default function NewsCard({ newsData }: NewsCardProps) {
         txSignature: signature,
       });
       const data = await response.data;
-      if (!data.ok) {
-        // setError(data.error);
+      if (!data.success) {
+        toast.error(data.error || "Database error.");
+        console.log("ERR data.success", data);
+      } else {
+        toast.success("News has been purchased!");
+        updateNews(newsData);
       }
     } catch (err) {
-      console.log("ERROR", err);
-      // setError((err as Error)?.message);
+      console.log("ERR CATCH", err);
+      const errorMessage = (err as AxiosError<{ error?: string }>)?.response?.data?.error || (err as Error)?.message;
+      toast.error(errorMessage || "Transaction error.");
     } finally {
       setLoading(false);
     }
   };
 
+  const isLocked = locked && !is_purchased;
+
   return (
     <div
       className="rounded-md bg-slate-800 p-3 flex flex-col cursor-pointer hover:bg-slate-750 transition-colors"
       onClick={() => {
-        return locked ? handlePurchase() : openNewsModal(newsData);
+        return isLocked ? handlePurchase() : openNewsModal(newsData);
       }}
     >
       <div className="flex justify-between items-center">
@@ -122,7 +131,7 @@ export default function NewsCard({ newsData }: NewsCardProps) {
           ) : (
             <div />
           )}
-          {locked ? (
+          {isLocked ? (
             <Tooltip text="Locked">
               <IoMdLock className="text-gray-200" size={22} />
             </Tooltip>
@@ -131,16 +140,16 @@ export default function NewsCard({ newsData }: NewsCardProps) {
           )}
         </div>
       </div>
-      <h1 className={`font-bold my-3 flex-grow line-clamp-3 ${locked && "blur-md"}`}>{title}</h1>
+      <h1 className={`font-bold my-3 flex-grow line-clamp-3 ${isLocked && "blur-md"}`}>{title}</h1>
       <div
         className={`relative w-full h-48 overflow-hidden rounded-md transition-opacity ${!thumbnail_url ? "bg-white/10" : ""}`}
       >
         {/* 🔒 LOCKED */}
-        {locked && (
+        {isLocked && (
           <div className="shiny font-semibold justify-center items-center flex flex-col bg-black/30 absolute w-full h-full transition-opacity z-10">
             <div className="flex items-center">
               <img className="h-6 w-6 mr-2" src="/images/flux-small.png" />
-              <span>34.99</span>
+              <span>{price}</span>
             </div>
 
             {loading ? "Processing..." : "BUY NOW"}
@@ -163,7 +172,7 @@ export default function NewsCard({ newsData }: NewsCardProps) {
         <img
           src={thumbnail_url || icon_url || undefined}
           alt={title}
-          className={`absolute inset-0 ${thumbnail_url ? "w-full h-full" : "w-20 h-20"} object-center m-auto object-cover ${locked && "blur-md"}`}
+          className={`absolute inset-0 ${thumbnail_url ? "w-full h-full" : "w-20 h-20"} object-center m-auto object-cover ${isLocked && "blur-md"}`}
         />
       </div>
       <div className="flex mt-3 justify-between items-center">

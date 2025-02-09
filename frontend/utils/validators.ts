@@ -1,11 +1,13 @@
-"user server";
-
 import jwt from "jsonwebtoken";
-import { AuthVerifierType, DecodedAuthJwt } from "types/api";
+import { DecodedAuthJwt } from "types/api";
+
+export interface AuthVerifierType {
+  req: Request;
+}
 
 export function authVerifier({ req }: AuthVerifierType): DecodedAuthJwt {
   const JWT_SECRET = process.env.JWT_SECRET as string;
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.get("authorization");
 
   if (!authHeader) {
     throw new Error("Authorization header missing");

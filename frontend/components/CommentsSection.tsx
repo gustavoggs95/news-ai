@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { Textarea } from "@headlessui/react";
 import fluxApi from "config/axios";

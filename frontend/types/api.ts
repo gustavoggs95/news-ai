@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { CardRank } from "config/types";
 import { CommentsType, NewsType, UsersType } from "./supabase";
 
 export interface AuthenticateResponse {
@@ -47,14 +47,33 @@ export type ListCommentsResponse =
 export type UpdateUserInput = { username: string; id: number };
 export type AddCommentInput = { user_id: number; news_id: number; content: string; parent_id?: number };
 
-export interface AuthVerifierType {
-  req: NextApiRequest;
-  res: NextApiResponse;
-}
-
 export interface DecodedAuthJwt {
   publicKey: string;
   iat: number;
   exp: number;
   user_id: number;
 }
+export type GetNewsData = {
+  id: number;
+  title: string;
+  locked: boolean;
+  rank: CardRank;
+  thumbnail_url: string;
+  icon_url: string;
+  content: string;
+  created_at: string;
+  is_purchased: boolean;
+  price?: number;
+};
+
+export type GetNewsResponse =
+  | {
+      success: true;
+      news: GetNewsData[];
+      error?: never;
+    }
+  | {
+      success: false;
+      news?: GetNewsData[];
+      error: string;
+    };

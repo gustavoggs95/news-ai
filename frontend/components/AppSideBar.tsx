@@ -1,8 +1,11 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { FaHistory, FaPlus } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import Modal from "react-modal";
 import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
 import CreateNews from "./CreateNewsModal";
 
 const customStyles: Modal.Styles = {
@@ -27,12 +30,10 @@ const customStyles: Modal.Styles = {
   },
 };
 
-Modal.setAppElement("#__next");
-
 export default function AppSideBar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
-    Modal.setAppElement("#__next");
+    Modal.setAppElement("#app-root");
   }, []);
 
   return (
@@ -67,9 +68,17 @@ export default function AppSideBar() {
             <div className="absolute inset-0 bg-black opacity-0 hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>
           </div>
         </li>
-        <li className="p-4 hover:bg-gray-700 flex items-center cursor-pointer">
-          <FaHistory className="mr-2" />
-          History
+        <li className="hover:bg-gray-700 flex items-center cursor-pointer">
+          <Link href="/app" className="h-full p-4 w-full">
+            <FaHistory className="mr-2" />
+            Main
+          </Link>
+        </li>
+        <li className="hover:bg-gray-700 flex items-center cursor-pointer">
+          <Link href="/app/history" className="h-full p-4 w-full">
+            <FaHistory className="mr-2" />
+            History
+          </Link>
         </li>
       </ul>
     </div>
