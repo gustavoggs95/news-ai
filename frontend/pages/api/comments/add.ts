@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const supabase = createClient(req, res);
     const { data, error } = await supabase
       .from("comments")
-      .insert([{ user_id: token!.user_id, news_id, content, parent_id }])
+      .insert([{ user_id: token.user_id, news_id, content, parent_id }])
       .select()
       .single();
 

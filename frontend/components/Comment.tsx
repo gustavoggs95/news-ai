@@ -20,7 +20,7 @@ export default function Comment({
     <div key={index} className="rounded-lg border border-slate-700 p-3">
       <div className="flex items-center">
         <img
-          className="h-16 w-16 rounded-full border-[0.5px] border-white/20 self-start"
+          className="h-16 w-16 rounded-full border-[0.5px] border-white/20 self-start bg-black/20"
           src={`https://robohash.org/${fullKey}`}
         />
         <div className="flex flex-col ml-3 space-y-5">

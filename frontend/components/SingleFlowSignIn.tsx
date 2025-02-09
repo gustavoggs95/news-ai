@@ -133,7 +133,7 @@ export default function SingleFlowSignIn() {
         return;
       }
 
-      const message = `Sign in to MyApp ${Date.now()}`;
+      const message = `Sign in to Flux ${Date.now()}`;
       const encodedMessage = new TextEncoder().encode(message);
 
       const signatureBytes = await signMessage(encodedMessage);

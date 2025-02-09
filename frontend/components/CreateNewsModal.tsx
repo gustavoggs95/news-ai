@@ -6,7 +6,7 @@ import fluxApi from "config/axios";
 import { NewsType } from "types/supabase";
 import Loader from "./Loader";
 
-export default function CreateNews({ onClose }: { onClose: () => void }) {
+export default function CreateNewsModal({ onClose }: { onClose: () => void }) {
   const [newsData, setNewsData] = useState<Partial<NewsType>>({});
   const [loading, setLoading] = useState(false);
 
@@ -31,17 +31,6 @@ export default function CreateNews({ onClose }: { onClose: () => void }) {
       <form onSubmit={createNews}>
         <div className="space-y-4 mb-10">
           <div className="space-y-2 flex flex-col">
-            <label htmlFor="title" className="font-medium text-gray-300">
-              Title <span className="font-thin text-gray-400">(Optional)</span>
-            </label>
-            <input
-              id="news-title"
-              value={newsData.title || ""}
-              onChange={(e) => setNewsData({ ...newsData, title: e.target.value })}
-              className="rounded-md cursor-text  border-gray-300 shadow-sm focus:outline-none px-2 py-2 text-white bg-flux-input-500 hover:bg-flux-input-400 hover:bg-flux-input/1 placeholder:text-white/50 caret-white transition-colors"
-            />
-          </div>
-          <div className="space-y-2 flex flex-col">
             <label htmlFor="url" className="font-medium text-gray-300">
               URL *
             </label>
@@ -52,6 +41,17 @@ export default function CreateNews({ onClose }: { onClose: () => void }) {
               placeholder="https://example.com"
               type="url"
               required
+              className="rounded-md cursor-text  border-gray-300 shadow-sm focus:outline-none px-2 py-2 text-white bg-flux-input-500 hover:bg-flux-input-400 hover:bg-flux-input/1 placeholder:text-white/50 caret-white transition-colors"
+            />
+          </div>
+          <div className="space-y-2 flex flex-col">
+            <label htmlFor="title" className="font-medium text-gray-300">
+              Title <span className="font-thin text-gray-400">(Optional)</span>
+            </label>
+            <input
+              id="news-title"
+              value={newsData.title || ""}
+              onChange={(e) => setNewsData({ ...newsData, title: e.target.value })}
               className="rounded-md cursor-text  border-gray-300 shadow-sm focus:outline-none px-2 py-2 text-white bg-flux-input-500 hover:bg-flux-input-400 hover:bg-flux-input/1 placeholder:text-white/50 caret-white transition-colors"
             />
           </div>

@@ -3,7 +3,7 @@ import { FaHistory, FaPlus } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import Modal from "react-modal";
 import "react-toastify/dist/ReactToastify.css";
-import CreateNews from "./CreateNews";
+import CreateNews from "./CreateNewsModal";
 
 const customStyles: Modal.Styles = {
   content: {
@@ -44,12 +44,11 @@ export default function AppSideBar() {
         contentLabel="News Modal"
         closeTimeoutMS={250}
       >
-        <div className="flex justify-between items-center p-4">
-          <div />
+        <div className="flex justify-center items-center p-4 relative">
           <h1 className="font-semibold text-white/80">Creating post</h1>
           <IoMdClose
             size={26}
-            className="cursor-pointer text-white/80 hover:text-white transition-colors"
+            className="cursor-pointer text-white/80 hover:text-white transition-colors absolute right-3"
             onClick={() => setIsModalOpen(false)}
           />
         </div>

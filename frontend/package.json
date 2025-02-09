@@ -8,7 +8,7 @@
     "require": "./index.cjs"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "prettier:check": "prettier --check .",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
+    "@solana/spl-token": "^0.4.12",
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-base-ui": "^0.1.2",
     "@solana/wallet-adapter-react": "^0.15.35",

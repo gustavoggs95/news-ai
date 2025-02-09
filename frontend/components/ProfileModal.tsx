@@ -92,7 +92,7 @@ export function ProfileModal() {
             <div className="space-y-4 mb-10">
               <div className="space-y-2 flex flex-col ">
                 <img
-                  className="h-24 w-24 rounded-full border-[0.5px] border-white/20 self-center mb-3"
+                  className="h-24 w-24 rounded-full border-[0.5px] border-white/20 self-center mb-3 bg-black/20"
                   src={`https://robohash.org/${fullKey}`}
                 />
                 <label htmlFor="title" className="font-medium text-gray-300">

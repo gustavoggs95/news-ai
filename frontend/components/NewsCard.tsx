@@ -1,7 +1,12 @@
+import { useState } from "react";
 import { BiCommentDetail } from "react-icons/bi";
 import { BsFire } from "react-icons/bs";
 import { IoMdLock } from "react-icons/io";
 import { TbArrowBigDown, TbArrowBigUp } from "react-icons/tb";
+import { createTransferCheckedInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { Connection, PublicKey, Transaction } from "@solana/web3.js";
+import fluxApi from "config/axios";
 import { CardRank, NewsCardProps } from "config/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -15,16 +20,97 @@ export default function NewsCard({ newsData }: NewsCardProps) {
   const { created_at, locked, rank, title, thumbnail_url, icon_url } = newsData;
   const { openNewsModal } = useNewsStore();
 
-  const isHot = dayjs().diff(created_at, "hour") < 24;
+  const { publicKey, sendTransaction } = useWallet();
+  const [loading, setLoading] = useState(false);
+  const [txSignature, setTxSignature] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
 
+  const isHot = dayjs().diff(created_at, "hour") < 24;
+  const fluxMintAddress = process.env.NEXT_PUBLIC_FLUX_MINT_ADDRESS!;
+  const treasuryWalletAddress = process.env.NEXT_PUBLIC_TREASURY_WALLET!;
+  const solanaRpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_URL!;
+  console.log("solanaRpcUrl", solanaRpcUrl);
   const handleUpvoteClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
+  };
+
+  const handlePurchase = async () => {
+    if (!publicKey) {
+      // setError("Please connect your wallet.");
+      return;
+    }
+    setLoading(true);
+    // setError(null);
+
+    try {
+      // Create a connection to Devnet.
+      const connection = new Connection(solanaRpcUrl, "confirmed");
+      const fluxMint = new PublicKey(fluxMintAddress);
+      const treasuryWallet = new PublicKey(treasuryWalletAddress);
+
+      // Derive the associated token accounts for the user's wallet and the treasury wallet.
+      const userTokenAccount = await getAssociatedTokenAddress(fluxMint, publicKey);
+      const treasuryTokenAccount = await getAssociatedTokenAddress(fluxMint, treasuryWallet);
+
+      // For this example, assume Flux Coin has 9 decimals.
+      const decimals = 9;
+      // Convert the price to the smallest units.
+      const price = newsData.price ?? 0;
+      const amount = price * Math.pow(10, decimals);
+
+      // Create the token transfer instruction.
+      const transferIx = createTransferCheckedInstruction(
+        userTokenAccount, // Source token account.
+        fluxMint, // The Flux Coin mint.
+        treasuryTokenAccount, // Destination token account (your treasury).
+        publicKey, // Owner of the source account.
+        amount, // Amount to transfer (in smallest units).
+        decimals, // Number of decimals.
+      );
+
+      // Build the transaction.
+      const transaction = new Transaction().add(transferIx);
+      const latestBlockhash = await connection.getLatestBlockhash();
+      transaction.feePayer = publicKey;
+      transaction.recentBlockhash = latestBlockhash.blockhash;
+
+      // Send the transaction using the wallet adapter.
+      const signature = await sendTransaction(transaction, connection);
+
+      await connection.confirmTransaction(
+        {
+          signature,
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+        },
+        "confirmed",
+      );
+      setTxSignature(signature);
+
+      // Optionally, call your backend API to record the purchase.
+      const response = await fluxApi.post("/api/news/purchase", {
+        walletAddress: publicKey.toBase58(),
+        newsId: newsData.id,
+        txSignature: signature,
+      });
+      const data = await response.data;
+      if (!data.ok) {
+        // setError(data.error);
+      }
+    } catch (err) {
+      console.log("ERROR", err);
+      // setError((err as Error)?.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div
       className="rounded-md bg-slate-800 p-3 flex flex-col cursor-pointer hover:bg-slate-750 transition-colors"
-      onClick={() => openNewsModal(newsData)}
+      onClick={() => {
+        return locked ? handlePurchase() : openNewsModal(newsData);
+      }}
     >
       <div className="flex justify-between items-center">
         <RankTag rank={rank as CardRank} />
@@ -56,7 +142,21 @@ export default function NewsCard({ newsData }: NewsCardProps) {
               <img className="h-6 w-6 mr-2" src="/images/flux-small.png" />
               <span>34.99</span>
             </div>
-            BUY NOW
+
+            {loading ? "Processing..." : "BUY NOW"}
+
+            {txSignature && (
+              <p>
+                Transaction Signature:{" "}
+                <a
+                  href={`https://explorer.solana.com/tx/${txSignature}?cluster=devnet`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {txSignature}
+                </a>
+              </p>
+            )}
           </div>
         )}
 

@@ -176,7 +176,7 @@ export function NewsModal() {
 
                 <div className="flex space-x-5 text-gray-400">
                   <div className="flex">
-                    <div className="bg-white/10 rounded-md flex">
+                    <div className="bg-white/10 rounded-md flex h-full ">
                       <Tooltip text="Upvote">
                         <div className="rounded-l-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors">
                           <span className="mr-1 font-semibold">19</span>
