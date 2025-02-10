@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { BsFire } from "react-icons/bs";
 import { FaEye } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
@@ -113,104 +113,106 @@ export function NewsModal() {
   const isHot = news ? dayjs().diff(news.created_at, "hour") < 24 : false;
 
   return (
-    <ReactModal
-      isOpen={isNewsModalOpen}
-      onRequestClose={handleClose}
-      style={customStyles}
-      contentLabel="News Modal"
-      ariaHideApp={false}
-    >
-      <div className="overflow-hidden flex flex-col flex-1">
-        <div className="flex-1 overflow-auto">
-          <div className="flex justify-between items-center p-4">
-            <div />
-            <h1 className="max-w-[90%] text-2xl font-bold text-white/90 text-center">
-              {news?.title || "News Article"}
-            </h1>
-            <IoMdClose
-              size={26}
-              className="cursor-pointer text-white/80 hover:text-white transition-colors self-baseline mt-1.5"
-              onClick={handleClose}
-            />
-          </div>
+    <Suspense>
+      <ReactModal
+        isOpen={isNewsModalOpen}
+        onRequestClose={handleClose}
+        style={customStyles}
+        contentLabel="News Modal"
+        ariaHideApp={false}
+      >
+        <div className="overflow-hidden flex flex-col flex-1">
+          <div className="flex-1 overflow-auto">
+            <div className="flex justify-between items-center p-4">
+              <div />
+              <h1 className="max-w-[90%] text-2xl font-bold text-white/90 text-center">
+                {news?.title || "News Article"}
+              </h1>
+              <IoMdClose
+                size={26}
+                className="cursor-pointer text-white/80 hover:text-white transition-colors self-baseline mt-1.5"
+                onClick={handleClose}
+              />
+            </div>
 
-          <div className="w-full p-4 mx-auto space-y-6">
-            {isLoading && <Loader className="mx-auto" />}
+            <div className="w-full p-4 mx-auto space-y-6">
+              {isLoading && <Loader className="mx-auto" />}
 
-            {error && <div className="text-red-400 text-center">{error}</div>}
+              {error && <div className="text-red-400 text-center">{error}</div>}
 
-            {!isLoading && !error && news && (
-              <>
-                <a
-                  href={news.url || undefined}
-                  target="_blank"
-                  className={`cursor-pointer relative w-full h-48 overflow-hidden flex rounded-lg ${
-                    !news.thumbnail_url ? "bg-white/10" : ""
-                  }`}
-                >
-                  <div className="cursor-pointer transition-colors bg-black/20 absolute top-3 right-3 p-2 rounded-lg">
-                    <RxExternalLink size={25} />
-                  </div>
-                  <img
-                    src={news.thumbnail_url || news.icon_url || undefined}
-                    alt={news.title}
-                    className={`m-auto object-cover ${news.thumbnail_url ? "w-full h-full" : "w-20 h-20"}`}
-                  />
-                  <div className="absolute w-full h-full hover:bg-white/10 transition-colors duration-75" />
-                </a>
-                <div className="flex items-center justify-between">
-                  <RankTag className="py-1" rank={news.rank as CardRank} />
-                  <div className="flex items-center space-x-3">
-                    {isHot && (
-                      <Tooltip text="Hot News!">
-                        <BsFire className="text-red-400" size={20} />
-                      </Tooltip>
-                    )}
-                    <a
-                      href={news.url || undefined}
-                      target="_blank"
-                      className="cursor-pointer flex items-center space-x-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors duration-75 px-3 py-1"
-                    >
-                      <img className="h-5 w-5" src={news.icon_url || undefined} />
-                      {news.source && <span className="mb-0.5">{news.source}</span>}
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <span className="text-gray-300">{news.content}</span>
-                </div>
-
-                <div className="flex space-x-5 text-gray-400">
-                  <div className="flex">
-                    <div className="bg-white/10 rounded-md flex h-full">
-                      <Tooltip text="Upvote">
-                        <div className="rounded-l-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors">
-                          <span className="mr-1 font-semibold">19</span>
-                          <TbArrowBigUp size={20} />
-                        </div>
-                      </Tooltip>
-                      <div className="h-full w-[1px] bg-white/10" />
-                      <Tooltip text="Downvote">
-                        <div className="rounded-r-md h-full px-2 py-1 flex items-center cursor-pointer hover:bg-red-500/50 text-slate-300 hover:text-green-200 transition-colors">
-                          <TbArrowBigDown size={20} />
-                        </div>
-                      </Tooltip>
+              {!isLoading && !error && news && (
+                <>
+                  <a
+                    href={news.url || undefined}
+                    target="_blank"
+                    className={`cursor-pointer relative w-full h-48 overflow-hidden flex rounded-lg ${
+                      !news.thumbnail_url ? "bg-white/10" : ""
+                    }`}
+                  >
+                    <div className="cursor-pointer transition-colors bg-black/20 absolute top-3 right-3 p-2 rounded-lg">
+                      <RxExternalLink size={25} />
+                    </div>
+                    <img
+                      src={news.thumbnail_url || news.icon_url || undefined}
+                      alt={news.title}
+                      className={`m-auto object-cover ${news.thumbnail_url ? "w-full h-full" : "w-20 h-20"}`}
+                    />
+                    <div className="absolute w-full h-full hover:bg-white/10 transition-colors duration-75" />
+                  </a>
+                  <div className="flex items-center justify-between">
+                    <RankTag className="py-1" rank={news.rank as CardRank} />
+                    <div className="flex items-center space-x-3">
+                      {isHot && (
+                        <Tooltip text="Hot News!">
+                          <BsFire className="text-red-400" size={20} />
+                        </Tooltip>
+                      )}
+                      <a
+                        href={news.url || undefined}
+                        target="_blank"
+                        className="cursor-pointer flex items-center space-x-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors duration-75 px-3 py-1"
+                      >
+                        <img className="h-5 w-5" src={news.icon_url || undefined} alt="icon-url" />
+                        {news.source && <span className="mb-0.5">{news.source}</span>}
+                      </a>
                     </div>
                   </div>
-                  <span className="flex items-center">
-                    <FaEye size={20} className="mr-1 mt-0.5" />
-                    {news.views} views
-                  </span>
-                  <span className="flex items-center">
-                    <FaCalendarAlt size={18} className="mr-1 mt-0.5" /> {dayjs(news.created_at).fromNow()}
-                  </span>
-                </div>
-                <CommentsSection />
-              </>
-            )}
+                  <div>
+                    <span className="text-gray-300">{news.content}</span>
+                  </div>
+
+                  <div className="flex space-x-5 text-gray-400">
+                    <div className="flex">
+                      <div className="bg-white/10 rounded-md flex h-full">
+                        <Tooltip text="Upvote">
+                          <div className="rounded-l-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors">
+                            <span className="mr-1 font-semibold">19</span>
+                            <TbArrowBigUp size={20} />
+                          </div>
+                        </Tooltip>
+                        <div className="h-full w-[1px] bg-white/10" />
+                        <Tooltip text="Downvote">
+                          <div className="rounded-r-md h-full px-2 py-1 flex items-center cursor-pointer hover:bg-red-500/50 text-slate-300 hover:text-green-200 transition-colors">
+                            <TbArrowBigDown size={20} />
+                          </div>
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <span className="flex items-center">
+                      <FaEye size={20} className="mr-1 mt-0.5" />
+                      {news.views} views
+                    </span>
+                    <span className="flex items-center">
+                      <FaCalendarAlt size={18} className="mr-1 mt-0.5" /> {dayjs(news.created_at).fromNow()}
+                    </span>
+                  </div>
+                  <CommentsSection />
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </ReactModal>
+      </ReactModal>
+    </Suspense>
   );
 }

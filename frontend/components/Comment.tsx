@@ -14,6 +14,7 @@ export default function Comment({ comment: { content, users, created_at } }: { c
     <div className="rounded-lg border border-slate-700 p-3">
       <div className="flex items-center">
         <img
+          alt="robohash-comment"
           className="h-16 w-16 rounded-full border-[0.5px] border-white/20 self-start bg-black/20"
           src={`https://robohash.org/${fullKey}`}
         />

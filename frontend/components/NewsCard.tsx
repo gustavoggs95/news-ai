@@ -146,7 +146,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
         {isLocked && (
           <div className="shiny font-semibold justify-center items-center flex flex-col bg-black/30 absolute w-full h-full transition-opacity z-10">
             <div className="flex items-center">
-              <img className="h-6 w-6 mr-2" src="/images/flux-small.png" />
+              <img alt="pric-icon" className="h-6 w-6 mr-2" src="/images/flux-small.png" />
               <span>{price}</span>
             </div>
 

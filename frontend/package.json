@@ -11,8 +11,10 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "prettier:check": "prettier --check .",
-    "prettier:write": "prettier --write ."
+    "p:check": "prettier --check .",
+    "p:write": "prettier --write .",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -51,12 +53,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@next/eslint-plugin-next": "^15.1.6",
     "@trivago/prettier-plugin-sort-imports": "^5.2.1",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^22.10.10",
     "@types/react": "19.0.8",
     "@types/react-modal": "^3.16.3",
-    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/eslint-plugin": "^8.23.0",
     "@typescript-eslint/parser": "^8.21.0",
     "eslint": "^9.19.0",
     "eslint-config-prettier": "^10.0.1",

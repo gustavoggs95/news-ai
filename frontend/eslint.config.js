@@ -1,33 +1,25 @@
-import js from "@eslint/js";
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+// eslint.config.js
+import { FlatCompat } from "@eslint/eslintrc";
 
-export default tseslint.config(
-  { ignores: ["dist"], settings: { react: { version: "18.3" } } },
-  {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended, eslintPluginPrettierRecommended],
-    files: ["**/*.{js,jsx,ts,tsx}"],
-    languageOptions: {
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-      ecmaVersion: 2020,
-      globals: globals.browser,
-    },
-    plugins: {
-      "react-hooks": reactHooks,
-      "react-refresh": reactRefresh,
-      react,
+const compat = new FlatCompat({
+  // For Node.js v20.11.0 or adjust accordingly
+  baseDirectory: import.meta.dirname,
+});
+
+const eslintConfig = [
+  // Convert legacy Next.js configs using FlatCompat
+  ...compat.config({
+    extends: [
+      "next/core-web-vitals", // Next.js Core Web Vitals recommended rules
+      "next/typescript", // Next.js TypeScript rules
+    ],
+    plugins: ["react", "react-hooks", "react-refresh", "prettier"],
+    settings: {
+      react: { version: "18.3" },
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "@next/next/no-img-element": "off",
+      "react/no-unescaped-entities": "off",
       "prettier/prettier": [
         "error",
         {
@@ -36,5 +28,17 @@ export default tseslint.config(
         },
       ],
     },
+  }),
+  // Apply language options and disable the rule for your source files
+  {
+    files: ["**/*.{js,jsx,ts,tsx}"],
+    languageOptions: {
+      ecmaVersion: 2020,
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
+    },
   },
-);
+];
+
+export default eslintConfig;

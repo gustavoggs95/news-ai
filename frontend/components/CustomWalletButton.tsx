@@ -40,6 +40,7 @@ export default function CustomWalletButton({ authLoading }: { authLoading: boole
             {authLoading && <Loader className="fill-white mt-0.5 mr-3 h-5 w-5" />}
             {walletUserLabel}
             <img
+              alt="robohash-custom-wallet"
               className="ml-3 h-8 w-8 rounded-full border-[0.5px] border-white/20 bg-black/20"
               src={`https://robohash.org/${publicKey.toBase58()}`}
             />

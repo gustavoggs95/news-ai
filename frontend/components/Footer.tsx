@@ -1,4 +1,7 @@
 "use client";
+
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="pb-4 text-gray-200 border-t border-gray-900">
@@ -18,9 +21,9 @@ export default function Footer() {
                 alt="Flux Logo"
                 src="/images/flux-png.png"
               />
-              <a href="/" className="flex text-3xl text-white font-medium">
+              <Link href="/" className="flex text-3xl text-white font-medium">
                 Flux
-              </a>
+              </Link>
             </div>
           </ul>
         </div>

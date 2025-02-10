@@ -59,7 +59,7 @@ const Main: React.FC = () => {
               <div className="absolute bottom-0 left-0 right-0 h-1/6 bg-gradient-to-tl from-black to-transparent"></div>
             </div> */}
             <h3 className="font-semibold text-lg text-white flex">
-              <img src="/images/news.svg" className="w-6 h-6 mr-3" />
+              <img alt="stay-ahead" src="/images/news.svg" className="w-6 h-6 mr-3" />
               Stay Ahead with Real-Time Crypto News
             </h3>
             <p className="pt-2 value-text text-md text-gray-200 fkrr1">
@@ -69,7 +69,7 @@ const Main: React.FC = () => {
           </div>
           <div className="ktq4">
             <h3 className="font-semibold text-lg text-white flex">
-              <img src="/images/bitcoin.svg" className="w-6 h-6 mr-3" />
+              <img alt="bitcon" src="/images/bitcoin.svg" className="w-6 h-6 mr-3" />
               Empowering Transactions with Flux Coin
             </h3>
             <p className="pt-2 value-text text-md text-gray-200 fkrr1">
@@ -79,7 +79,7 @@ const Main: React.FC = () => {
           </div>
           <div className="ktq4">
             <h3 className="font-semibold text-lg text-white flex">
-              <img src="/images/graph.svg" className="w-6 h-6 mr-3" />
+              <img alt="graph" src="/images/graph.svg" className="w-6 h-6 mr-3" />
               AI-Driven Insights at Your Fingertips
             </h3>
             <p className="pt-2 value-text text-md text-gray-200 fkrr1">
@@ -89,7 +89,7 @@ const Main: React.FC = () => {
           </div>
           <div className="ktq4">
             <h3 className="font-semibold text-lg text-white flex">
-              <img src="/images/exchange.svg" className="w-6 h-6 mr-3" />
+              <img alt="exchange" src="/images/exchange.svg" className="w-6 h-6 mr-3" />
               Trade Flux News
             </h3>
             <p className="pt-2 value-text text-md text-gray-200 fkrr1">
@@ -105,6 +105,7 @@ const Main: React.FC = () => {
           </h3>
           <div className="h-[445px]">
             <img
+              alt="test-card"
               src="./images/test-card.png"
               className="w-full rotate-card rounded-xl overflow-hidden absolute sm:left-5"
             />

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
@@ -12,9 +13,9 @@ export default function Header() {
       <div className="max-w-5xl mx-auto flex flex-wrap p-5 flex-col md:flex-row">
         <div className="flex flex-row items-center justify-between p-3 md:p-1">
           <img className="object-center w-9 h-9 shadow-md mr-3" alt="Flux Logo" src="/images/flux-png.png" />
-          <a href="/" className="flex text-3xl text-white font-medium">
+          <Link href="/" className="flex text-3xl text-white font-medium">
             Flux
-          </a>
+          </Link>
           <button
             className="text-white pb-4 cursor-pointer leading-none px-3 py-1 md:hidden outline-none focus:outline-none content-end ml-auto"
             type="button"
@@ -133,7 +134,7 @@ export default function Header() {
             <a className="mr-12 md:ml-11 cursor-pointer text-gray-300 hover:text-white font-semibold tr04">Careers</a>
           </div>
           <a href="https://x.com/" rel="noopener noreferrer" target="_blank" className="invisible md:visible mr-6">
-            <img src="/images/x.svg" className="w-6 h-6 cursor-pointer" />
+            <img alt="x" src="/images/x.svg" className="w-6 h-6 cursor-pointer" />
           </a>
           <a
             href="https://discord.com/"
@@ -141,18 +142,18 @@ export default function Header() {
             target="_blank"
             className="invisible md:visible mr-6"
           >
-            <img src="/images/discord.svg" className="w-6 h-6 cursor-pointer" />
+            <img alt="discord" src="/images/discord.svg" className="w-6 h-6 cursor-pointer" />
           </a>
           <div className="text-center">
             <div className="relative inline-flex items-center cursor-pointer" onClick={() => router.push("/app")}>
-              <a
+              <Link
                 className="inline-flex items-center rounded-lg bg-gradient-to-r bg-white px-6 py-1 font-semibold tracking-tighter text-gray-700 transition-transform ease-in-out transform hover:scale-105 focus:shadow-outline"
                 href="/"
               >
                 <div className="flex text-lg">
                   <span className="justify-center">Log In</span>
                 </div>
-              </a>
+              </Link>
               <div className="absolute inset-0 bg-black opacity-0 hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>
             </div>
           </div>
