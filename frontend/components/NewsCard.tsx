@@ -24,7 +24,6 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
 
   const { publicKey, sendTransaction } = useWallet();
   const [loading, setLoading] = useState(false);
-  const [txSignature, setTxSignature] = useState<string | null>(null);
   // const [error, setError] = useState<string | null>(null);
 
   const isHot = dayjs().diff(created_at, "hour") < 24;
@@ -87,7 +86,6 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
         },
         "confirmed",
       );
-      setTxSignature(signature);
 
       // Optionally, call your backend API to record the purchase.
       const response = await fluxApi.post("/api/news/purchase", {
@@ -153,19 +151,6 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
             </div>
 
             {loading ? "Processing..." : "BUY NOW"}
-
-            {txSignature && (
-              <p>
-                Transaction Signature:{" "}
-                <a
-                  href={`https://explorer.solana.com/tx/${txSignature}?cluster=devnet`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {txSignature}
-                </a>
-              </p>
-            )}
           </div>
         )}
 

@@ -19,7 +19,7 @@ export default function AppHeader() {
           <img
             className="object-cover object-center h-9 w-9 shadow-md mr-3"
             alt="Flux Logo"
-            src="./images/flux-png.png"
+            src="/images/flux-png.png"
           />
           <a href="/app" className="flex text-3xl text-white font-medium">
             Flux

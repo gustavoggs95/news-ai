@@ -49,7 +49,7 @@ export function ProfileModal() {
     setLoading(true);
     try {
       const updateUserData: UpdateUserInput = { id: user.id, username: usersData.username as string };
-      const response = await fluxApi.put("/api/users/update", updateUserData);
+      const response = await fluxApi.put("/api/users", updateUserData);
       const data: UpdateUserResponse = response.data;
       if (data.success) {
         toast.success("Profile updated successfully!", { position: "top-center" });
@@ -103,7 +103,7 @@ export function ProfileModal() {
                   placeholder={user?.username || user?.public_address || undefined}
                   minLength={3}
                   maxLength={50}
-                  value={usersData.username || user?.username || ""}
+                  value={usersData.username ?? user?.username ?? ""}
                   onChange={(e) => setUsersData({ ...usersData, username: e.target.value })}
                   className="rounded-md cursor-text placeholder:opacity-25 border-gray-300 shadow-sm focus:outline-none px-2 py-2 text-white bg-flux-input-500 hover:bg-flux-input-400 hover:bg-flux-input/1 placeholder:text-white/50 caret-white transition-colors"
                 />

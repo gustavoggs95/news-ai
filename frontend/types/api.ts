@@ -1,5 +1,5 @@
 import { CardRank } from "config/types";
-import { CommentsType, NewsType, UsersType } from "./supabase";
+import { CommentsType, UsersType } from "./supabase";
 
 export interface AuthenticateResponse {
   success: boolean;
@@ -23,7 +23,7 @@ export type UpdateUserResponse =
 export type OneNewsResponse =
   | {
       success: true;
-      news: NewsType;
+      news: GetNewsData;
       error?: never;
     }
   | {
@@ -63,7 +63,10 @@ export type GetNewsData = {
   content: string;
   created_at: string;
   is_purchased: boolean;
+  source: string;
+  url: string;
   price?: number;
+  views: number;
 };
 
 export type GetNewsResponse =

@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { FaHistory, FaPlus } from "react-icons/fa";
+import { BiSolidPurchaseTag } from "react-icons/bi";
+import { FaPlus } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import Modal from "react-modal";
 import "react-toastify/dist/ReactToastify.css";
@@ -69,15 +71,15 @@ export default function AppSideBar() {
           </div>
         </li>
         <li className="hover:bg-gray-700 flex items-center cursor-pointer">
-          <Link href="/app" className="h-full p-4 w-full">
-            <FaHistory className="mr-2" />
-            Main
+          <Link href="/app" className="h-full p-4 w-full flex items-center">
+            <FaHome size={25} className="mr-2" />
+            Home
           </Link>
         </li>
         <li className="hover:bg-gray-700 flex items-center cursor-pointer">
-          <Link href="/app/history" className="h-full p-4 w-full">
-            <FaHistory className="mr-2" />
-            History
+          <Link href="/app/purchases" className="h-full p-4 w-full flex items-center">
+            <BiSolidPurchaseTag size={25} className="mr-2" />
+            Purchases
           </Link>
         </li>
       </ul>

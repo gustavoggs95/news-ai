@@ -64,7 +64,7 @@ export function NewsModal() {
   useEffect(() => {
     if (isNewsModalOpen && news) {
       const newSearchParams = new URLSearchParams(searchParams.toString());
-      newSearchParams.set("news", news.id);
+      newSearchParams.set("news", news.id.toString());
       router.push(`${pathname}?${newSearchParams.toString()}`);
     } else if (!isNewsModalOpen && searchParams.has("news")) {
       const newSearchParams = new URLSearchParams(searchParams.toString());

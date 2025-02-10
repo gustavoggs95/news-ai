@@ -16,7 +16,7 @@ export default function Footer() {
               <img
                 className="object-cover object-center w-8 h-8 shadow-md mt-1 mr-3"
                 alt="Flux Logo"
-                src="./images/flux-png.png"
+                src="/images/flux-png.png"
               />
               <a href="/" className="flex text-3xl text-white font-medium">
                 Flux

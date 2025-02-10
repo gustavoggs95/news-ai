@@ -15,7 +15,12 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="w-64 hidden md:block mt-[70px]">
           <AppSideBar />
         </div>
-        {children}
+
+        <div className="flex-grow p-4 mt-[70px]">
+          <div className="text-white body-font mt-10 max-w-2xl sm:max-w-2xl lg:max-w-3xl xl:max-w-6xl xxl:max-w-8xl mx-auto">
+            {children}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -6,18 +6,12 @@ import { CommentList } from "./CommentsSection";
 
 dayjs.extend(relativeTime);
 
-export default function Comment({
-  comment: { content, users, created_at },
-  index,
-}: {
-  comment: CommentList;
-  index: number;
-}) {
+export default function Comment({ comment: { content, users, created_at } }: { comment: CommentList }) {
   const fullKey = users?.public_address;
   const minifiedKey = fullKey ? `${fullKey.slice(0, 4)}...${fullKey.slice(-4)}` : null;
   const walletUserLabel = users?.username || minifiedKey;
   return (
-    <div key={index} className="rounded-lg border border-slate-700 p-3">
+    <div className="rounded-lg border border-slate-700 p-3">
       <div className="flex items-center">
         <img
           className="h-16 w-16 rounded-full border-[0.5px] border-white/20 self-start bg-black/20"
