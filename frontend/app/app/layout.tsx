@@ -1,5 +1,5 @@
 // /components/Layout.tsx
-import React from "react";
+import React, { Suspense } from "react";
 import { ToastContainer } from "react-toastify";
 import AppHeader from "components/AppHeader";
 import AppSideBar from "components/AppSideBar";
@@ -11,7 +11,9 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
       <AppHeader />
       <div className="flex h-[calc(100vh-70px)]">
         <ToastContainer theme="dark" />
-        <NewsModal />
+        <Suspense>
+          <NewsModal />
+        </Suspense>
         <div className="w-64 hidden md:block mt-[70px]">
           <AppSideBar />
         </div>
