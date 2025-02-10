@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Main: React.FC = () => {
   const VideoComponent: React.FC = () => {
@@ -21,7 +21,6 @@ const Main: React.FC = () => {
     );
   };
 
-  const route = useRouter();
   return (
     <section className="text-gray-600 body-font">
       <div className="center absolute z-0 w-full">
@@ -39,14 +38,14 @@ const Main: React.FC = () => {
             Your Fingertips
           </h2>
           <div className="ml-6 text-center">
-            <div className="relative inline-flex items-center cursor-pointer" onClick={() => route.push("/app")}>
-              <a className="inline-flex items-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-800 px-14 py-3 font-semibold tracking-tighter text-white transition-transform duration-1000 ease-in-out transform hover:scale-105 focus:shadow-outline">
+            <Link prefetch={true} className="relative inline-flex items-center cursor-pointer" href="/app">
+              <div className="inline-flex items-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-800 px-14 py-3 font-semibold tracking-tighter text-white transition-transform duration-1000 ease-in-out transform hover:scale-105 focus:shadow-outline">
                 <div className="flex text-lg">
                   <span className="justify-center">Get Started</span>
                 </div>
-              </a>
+              </div>
               <div className="absolute inset-0 bg-black opacity-0 hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>
-            </div>
+            </Link>
           </div>
         </div>
         <p className="mx-auto text-xl text-center text-gray-300 font-normal leading-relaxed fs521 lg:w-2/3 mt-10">

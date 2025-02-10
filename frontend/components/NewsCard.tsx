@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { BiCommentDetail } from "react-icons/bi";
 import { BsFire } from "react-icons/bs";

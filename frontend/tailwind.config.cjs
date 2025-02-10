@@ -1,6 +1,6 @@
 module.exports = {
   content: ["./components/**/*.tsx", "./app/**/*.tsx"],
-  darkMode: false, // or 'media' or 'class'
+  media: false, // or 'media' or 'class'
   theme: {
     extend: {
       screens: {
