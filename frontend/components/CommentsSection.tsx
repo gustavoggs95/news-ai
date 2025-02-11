@@ -125,7 +125,7 @@ export default function CommentsSection() {
         ) : commentList.length > 0 ? (
           commentList?.map((comment, index) => <Comment key={comment.id || index} comment={comment} />)
         ) : (
-          <div className="text-gray-300 w-full flex justify-center items-center h-[118px]">
+          <div className="text-gray-300 w-full flex justify-center items-center h-[133px]">
             There's nothing here, be the first to comment.
           </div>
         )}
