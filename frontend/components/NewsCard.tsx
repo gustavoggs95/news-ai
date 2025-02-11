@@ -32,7 +32,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
   const fluxMintAddress = process.env.NEXT_PUBLIC_FLUX_MINT_ADDRESS!;
   const treasuryWalletAddress = process.env.NEXT_PUBLIC_TREASURY_WALLET!;
   const solanaRpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_URL!;
-  console.log("solanaRpcUrl", solanaRpcUrl);
+
   const handleUpvoteClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
   };
