@@ -65,7 +65,7 @@ export default function AppMain() {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 gap-6 pb-10">
       {news.map((newsData, index) => {
         // Wrap the last item with the observer ref to trigger fetching more news
         if (index === news.length - 1) {

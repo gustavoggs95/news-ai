@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import jwt from "jsonwebtoken";
 import { getLinkPreview } from "link-preview-js";
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 import { DecodedAuthJwt } from "types/api";
 import { NewsType } from "types/supabase";
 import { authVerifier } from "utils/validators";
@@ -25,7 +26,6 @@ export async function GET(request: Request) {
     } else {
       currentUserId = 0;
     }
-    console.log("currentUserId", currentUserId);
 
     const { data, error } = await supabase.rpc("get_news_with_is_purchased", {
       p_buyer_id: currentUserId,
@@ -36,7 +36,6 @@ export async function GET(request: Request) {
     if (error) {
       return NextResponse.json({ error: error.message, success: false }, { status: 500 });
     }
-    console.log("data", data);
 
     return NextResponse.json({ success: true, news: data }, { status: 200 });
   } catch (error) {
@@ -62,18 +61,59 @@ export async function POST(req: Request) {
     const decodedToken = authVerifier({ req });
 
     const preview = await getLinkPreview(url);
-    console.log("preview", preview);
-    const imagePreview = "images" in preview ? preview.images?.[0] : undefined;
+
+    // Use let so we can update the variable after processing the image
+    let imagePreview = "images" in preview ? preview.images?.[0] : undefined;
     const newsTitle = "title" in preview ? preview.title : undefined;
     const source = "siteName" in preview ? preview.siteName : undefined;
     const content = "description" in preview ? preview.description : undefined;
     const icon_url = "favicons" in preview ? preview.favicons?.[0] : undefined;
 
+    const currentTitle = title || newsTitle;
+
+    // Process image: resize to 800 width, optimize, and upload to Supabase storage
+    if (imagePreview) {
+      try {
+        // Fetch the original image from the URL
+        const imageResponse = await fetch(imagePreview);
+        if (!imageResponse.ok) {
+          throw new Error(`Failed to fetch image: ${imageResponse.statusText}`);
+        }
+        const imageArrayBuffer = await imageResponse.arrayBuffer();
+        const imageBuffer = Buffer.from(imageArrayBuffer);
+
+        // Resize the image with sharp
+        const resizedBuffer = await sharp(imageBuffer).resize({ width: 800 }).jpeg({ quality: 80 }).toBuffer();
+
+        const sanitizedTitle = currentTitle?.replace(/\s+/g, "_")?.replace(/[^a-zA-Z0-9_-]/g, "") || "flux-news";
+        const fileName = `thumbnails/${sanitizedTitle.slice(0, 15)}_${Date.now()}.webp`;
+
+        // Upload the resized image to Supabase storage (update the bucket name accordingly)
+        const { error: uploadError } = await supabase.storage.from("flux-news").upload(fileName, resizedBuffer, {
+          contentType: "image/webp",
+          upsert: false,
+        });
+
+        if (uploadError) {
+          throw new Error(`Image upload failed: ${uploadError.message}`);
+        }
+
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from("flux-news").getPublicUrl(fileName);
+        imagePreview = publicUrl;
+      } catch (imgError) {
+        console.error("Error processing image:", imgError);
+        // Optionally you can decide whether to fail the request or fallback to the original URL.
+        // For now, we leave imagePreview as is.
+      }
+    }
+
     const insertParameters: NewsType = {
       ...body,
       thumbnail_url: imagePreview,
       rank: "Basic",
-      title: title || newsTitle,
+      title: currentTitle,
       source,
       content,
       icon_url,
@@ -83,11 +123,11 @@ export async function POST(req: Request) {
     const { data, error } = await supabase.from("news").insert([insertParameters]).select();
 
     if (error) {
-      NextResponse.json({ error: (error as Error)?.message }, { status: 500 });
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json({ message: "News added successfully", data }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: (error as Error)?.message }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
 }
