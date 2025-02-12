@@ -14,7 +14,6 @@ export async function GET(request: Request) {
     const authHeader = request.headers.get("authorization");
     const token = authHeader?.split(" ")[1];
 
-    // Extract pagination parameters from the query string (with defaults)
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const offset = parseInt(searchParams.get("offset") || "0", 10);
