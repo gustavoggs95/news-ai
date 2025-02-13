@@ -6,113 +6,125 @@ import { BsFire } from "react-icons/bs";
 import { IoMdLock } from "react-icons/io";
 import { TbArrowBigDown, TbArrowBigUp } from "react-icons/tb";
 import { toast } from "react-toastify";
-import { createTransferCheckedInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
+import { BN, Idl, utils } from "@project-serum/anchor";
+import { AnchorProvider, Program } from "@project-serum/anchor";
+import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
-import { AxiosError } from "axios";
 import fluxApi from "config/axios";
 import { CardRank, NewsCardProps } from "config/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useNewsStore } from "store/newsStore";
+// Import BN directly from bn.js
+// Import your program's IDL. Adjust the path as necessary.
+import idl from "../components/idl.json";
 import RankTag from "./RankTag";
 import Tooltip from "./Tooltip";
 
 dayjs.extend(relativeTime);
 
 export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
-  const { created_at, locked, rank, title, thumbnail_url, icon_url, is_purchased, price } = newsData;
+  const { locked, is_purchased, price, created_at, rank, thumbnail_url, title, icon_url } = newsData;
+  const { publicKey, signAllTransactions, signTransaction } = useWallet();
   const { openNewsModal } = useNewsStore();
-
-  const { publicKey, sendTransaction } = useWallet();
   const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState<string | null>(null);
-
   const isHot = dayjs().diff(created_at, "hour") < 24;
-  const fluxMintAddress = process.env.NEXT_PUBLIC_FLUX_MINT_ADDRESS!;
-  const treasuryWalletAddress = process.env.NEXT_PUBLIC_TREASURY_WALLET!;
-  const solanaRpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_URL!;
-
+  const isLocked = locked && !is_purchased;
   const handleUpvoteClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
   };
 
+  const fluxMintAddress = process.env.NEXT_PUBLIC_FLUX_MINT_ADDRESS!;
+  const treasuryWalletAddress = process.env.NEXT_PUBLIC_TREASURY_WALLET!;
+  const solanaRpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_URL!;
+  // Program ID for your custom program that implements purchaseNews.
+  const programId = new PublicKey("6pSR368t3YCLohJs5Kys8TvLWn9iD9rvAsUiXmacQh5");
+
+  const sellerWallet = "A29bvmCkMnJWrSLjtuSTh8W8f6yc8vaGseCYDJxhFR3G";
+
   const handlePurchase = async () => {
-    if (!publicKey) {
-      // setError("Please connect your wallet.");
+    if (!publicKey || !signTransaction) {
+      toast.error("Please connect your wallet with signTransaction support.");
       return;
     }
     setLoading(true);
-    // setError(null);
 
     try {
-      // Create a connection to Devnet.
+      // Create a connection to your Solana cluster.
       const connection = new Connection(solanaRpcUrl, "confirmed");
+
+      // Set up an Anchor provider using the wallet adapter.
+      const provider = new AnchorProvider(
+        connection,
+        {
+          publicKey,
+          signTransaction, // Use signTransaction here instead of sendTransaction
+          signAllTransactions: signAllTransactions ?? (async (txs: Transaction[]) => txs),
+        },
+        { preflightCommitment: "confirmed" },
+      );
+
+      // Initialize the program using its IDL and program ID.
+      const parsedIdl = idl as Idl;
+      const program = new Program(parsedIdl, programId, provider);
+
+      // Define the token mint and derive associated token accounts.
       const fluxMint = new PublicKey(fluxMintAddress);
       const treasuryWallet = new PublicKey(treasuryWalletAddress);
 
-      // Derive the associated token accounts for the user's wallet and the treasury wallet.
-      const userTokenAccount = await getAssociatedTokenAddress(fluxMint, publicKey);
+      // Buyer’s associated token account.
+      const buyerTokenAccount = await getAssociatedTokenAddress(fluxMint, publicKey);
+      // Treasury’s associated token account.
       const treasuryTokenAccount = await getAssociatedTokenAddress(fluxMint, treasuryWallet);
 
-      // For this example, assume Flux Coin has 9 decimals.
+      // Seller’s public key.
+      const seller = new PublicKey(sellerWallet);
+      const sellerTokenAccount = await getAssociatedTokenAddress(fluxMint, seller);
+
+      // For example, if your token has 9 decimals:
       const decimals = 9;
-      // Convert the price to the smallest units.
-      const price = newsData.price ?? 0;
-      const amount = price * Math.pow(10, decimals);
+      const priceValue = price ?? 0;
+      // Convert the price into the smallest unit.
+      const amount = priceValue * Math.pow(10, decimals);
+      const purchaseAmount = new BN(amount);
 
-      // Create the token transfer instruction.
-      const transferIx = createTransferCheckedInstruction(
-        userTokenAccount, // Source token account.
-        fluxMint, // The Flux Coin mint.
-        treasuryTokenAccount, // Destination token account (your treasury).
-        publicKey, // Owner of the source account.
-        amount, // Amount to transfer (in smallest units).
-        decimals, // Number of decimals.
-      );
+      // Call your custom program's purchaseNews instruction.
+      // This instruction deducts a 20% fee and transfers 80% to the seller.
+      const txSignature = await program.methods
+        .purchaseNews(purchaseAmount)
+        .accounts({
+          buyer: publicKey,
+          buyerTokenAccount: buyerTokenAccount,
+          treasuryTokenAccount: treasuryTokenAccount,
+          sellerTokenAccount: sellerTokenAccount,
+          tokenProgram: utils.token.TOKEN_PROGRAM_ID,
+        })
+        .rpc();
 
-      // Build the transaction.
-      const transaction = new Transaction().add(transferIx);
-      const latestBlockhash = await connection.getLatestBlockhash();
-      transaction.feePayer = publicKey;
-      transaction.recentBlockhash = latestBlockhash.blockhash;
-
-      // Send the transaction using the wallet adapter.
-      const signature = await sendTransaction(transaction, connection);
-
-      await connection.confirmTransaction(
-        {
-          signature,
-          blockhash: latestBlockhash.blockhash,
-          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-        },
-        "confirmed",
-      );
+      console.log("Transaction successful. Signature:", txSignature);
 
       // Optionally, call your backend API to record the purchase.
       const response = await fluxApi.post("/api/news/purchase", {
         walletAddress: publicKey.toBase58(),
         newsId: newsData.id,
-        txSignature: signature,
+        txSignature,
       });
       const data = await response.data;
       if (!data.success) {
         toast.error(data.error || "Database error.");
-        console.log("ERR data.success", data);
       } else {
         toast.success("News has been purchased!");
         updateNews(newsData);
       }
     } catch (err) {
-      console.log("ERR CATCH", err);
-      const errorMessage = (err as AxiosError<{ error?: string }>)?.response?.data?.error || (err as Error)?.message;
-      toast.error(errorMessage || "Transaction error.");
+      const errorMessage = (err as Error)?.message || "Transaction error.";
+      toast.error(errorMessage);
+      console.error("Transaction error: ", err);
     } finally {
       setLoading(false);
     }
   };
-
-  const isLocked = locked && !is_purchased;
 
   return (
     <div

@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     const icon_url = "favicons" in preview ? preview.favicons?.[0] : undefined;
 
     const currentTitle = title || newsTitle;
-
+    let fileName;
     // Process image: resize to 800 width, optimize, and upload to Supabase storage
     if (imagePreview) {
       try {
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
         const resizedBuffer = await sharp(imageBuffer).resize({ width: 800 }).jpeg({ quality: 80 }).toBuffer();
 
         const sanitizedTitle = currentTitle?.replace(/\s+/g, "_")?.replace(/[^a-zA-Z0-9_-]/g, "") || "flux-news";
-        const fileName = `thumbnails/${sanitizedTitle.slice(0, 15)}_${Date.now()}.webp`;
+        fileName = `thumbnails/${sanitizedTitle.slice(0, 15)}_${Date.now()}.webp`;
 
         // Upload the resized image to Supabase storage (update the bucket name accordingly)
         const { error: uploadError } = await supabase.storage.from("flux-news").upload(fileName, resizedBuffer, {
@@ -112,6 +112,7 @@ export async function POST(req: Request) {
     const insertParameters: NewsType = {
       ...body,
       thumbnail_url: imagePreview,
+      thumbnail_path: fileName,
       rank: "Basic",
       title: currentTitle,
       source,
