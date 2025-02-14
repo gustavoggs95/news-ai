@@ -59,7 +59,7 @@ export type Database = {
           source: string | null;
           views: string | null;
           price: number | null;
-          author_waller_address: string | null;
+          author_wallet_address: string | null;
         };
         Insert: {
           content?: string | null;
@@ -74,7 +74,7 @@ export type Database = {
           source?: string | null;
           views?: string | null;
           price?: number | null;
-          author_waller_address: string | null;
+          author_wallet_address: string | null;
         };
         Update: {
           content?: string | null;
@@ -89,7 +89,7 @@ export type Database = {
           source?: string | null;
           views?: string | null;
           price?: number | null;
-          author_waller_address: string | null;
+          author_wallet_address: string | null;
         };
         Relationships: [];
       };
