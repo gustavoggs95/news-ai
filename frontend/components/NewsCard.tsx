@@ -24,14 +24,24 @@ import Tooltip from "./Tooltip";
 dayjs.extend(relativeTime);
 
 export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
-  const { locked, is_purchased, price, created_at, rank, thumbnail_url, title, icon_url, author_wallet_address } =
-    newsData;
+  const {
+    locked,
+    is_purchased,
+    price,
+    created_at,
+    rank,
+    thumbnail_url,
+    title,
+    icon_url,
+    author_wallet_address,
+    is_own,
+  } = newsData;
   const { publicKey, signAllTransactions, signTransaction } = useWallet();
   const { openNewsModal } = useNewsStore();
   const [solanaLoading, setSolanaLoading] = useState(false);
   const [fluxLoading, setFluxLoading] = useState(false);
   const isHot = dayjs().diff(created_at, "hour") < 24;
-  const isLocked = locked && !is_purchased;
+  const isLocked = locked && !is_purchased && !is_own;
 
   const handleUpvoteClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
