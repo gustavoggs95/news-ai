@@ -6,7 +6,7 @@ interface NewsModalStore {
   isNewsModalOpen: boolean;
   isLoading: boolean;
   error: string | null;
-  openNewsModal: (news: GetNewsData) => void;
+  openNewsModal: (news: GetNewsData | null) => void;
   closeNewsModal: () => void;
   setNews: (news: GetNewsData | null) => void;
   setLoading: (loading: boolean) => void;
@@ -16,7 +16,7 @@ interface NewsModalStore {
 export const useNewsStore = create<NewsModalStore>((set) => ({
   isNewsModalOpen: false,
   news: null,
-  openNewsModal: (news: GetNewsData) => set({ news: news, isNewsModalOpen: true }),
+  openNewsModal: (news: GetNewsData | null) => set({ news: news, isNewsModalOpen: true }),
   closeNewsModal: () => set({ news: null, isNewsModalOpen: false }),
   isLoading: false,
   error: null,

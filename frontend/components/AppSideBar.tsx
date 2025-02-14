@@ -1,14 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { BiSolidPurchaseTag } from "react-icons/bi";
+import { BiPurchaseTag } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa";
-import { FaHome } from "react-icons/fa";
+import { HiOutlineHome } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
+import { PiNewspaperClipping } from "react-icons/pi";
 import Modal from "react-modal";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import CreateNews from "./CreateNewsModal";
+
+// Import usePathname
 
 const customStyles: Modal.Styles = {
   content: {
@@ -34,6 +38,8 @@ const customStyles: Modal.Styles = {
 
 export default function AppSideBar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const pathname = usePathname(); // Get the current pathname
+
   useEffect(() => {
     Modal.setAppElement("#app-root");
   }, []);
@@ -70,16 +76,28 @@ export default function AppSideBar() {
             <div className="absolute inset-0 bg-black opacity-0 hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>
           </div>
         </li>
-        <li className="hover:bg-gray-700 flex items-center cursor-pointer">
+        <li
+          className={`flex items-center cursor-pointer transition hover:bg-gray-700/50 ${pathname === "/app" && "bg-gray-700/40"}`}
+        >
           <Link href="/app" className="h-full p-4 w-full flex items-center">
-            <FaHome size={25} className="mr-2" />
+            <HiOutlineHome size={25} className="mr-2" />
             Home
           </Link>
         </li>
-        <li className="hover:bg-gray-700 flex items-center cursor-pointer">
+        <li
+          className={`flex items-center transition cursor-pointer hover:bg-gray-700/50 ${pathname === "/app/purchases" && "bg-gray-700/40"}`}
+        >
           <Link href="/app/purchases" className="h-full p-4 w-full flex items-center">
-            <BiSolidPurchaseTag size={25} className="mr-2" />
+            <BiPurchaseTag size={25} className="mr-2" />
             Purchases
+          </Link>
+        </li>
+        <li
+          className={`flex items-center transition cursor-pointer hover:bg-gray-700/50 ${pathname === "/app/posts" && "bg-gray-700/40"}`}
+        >
+          <Link href="/app/posts" className="h-full p-4 w-full flex items-center">
+            <PiNewspaperClipping size={25} className="mr-2" />
+            My Posts
           </Link>
         </li>
       </ul>

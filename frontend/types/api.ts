@@ -67,6 +67,7 @@ export type GetNewsData = {
   url: string;
   price?: number;
   views: number;
+  author_wallet_address: string;
 };
 
 export type GetNewsResponse =

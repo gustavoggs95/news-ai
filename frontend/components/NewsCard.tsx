@@ -16,21 +16,23 @@ import { CardRank, NewsCardProps } from "config/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useNewsStore } from "store/newsStore";
-// Import BN directly from bn.js
-// Import your program's IDL. Adjust the path as necessary.
 import idl from "../components/idl.json";
+import Loader from "./Loader";
 import RankTag from "./RankTag";
 import Tooltip from "./Tooltip";
 
 dayjs.extend(relativeTime);
 
 export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
-  const { locked, is_purchased, price, created_at, rank, thumbnail_url, title, icon_url } = newsData;
+  const { locked, is_purchased, price, created_at, rank, thumbnail_url, title, icon_url, author_wallet_address } =
+    newsData;
   const { publicKey, signAllTransactions, signTransaction } = useWallet();
   const { openNewsModal } = useNewsStore();
-  const [loading, setLoading] = useState(false);
+  const [solanaLoading, setSolanaLoading] = useState(false);
+  const [fluxLoading, setFluxLoading] = useState(false);
   const isHot = dayjs().diff(created_at, "hour") < 24;
   const isLocked = locked && !is_purchased;
+
   const handleUpvoteClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
   };
@@ -38,17 +40,18 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
   const fluxMintAddress = process.env.NEXT_PUBLIC_FLUX_MINT_ADDRESS!;
   const treasuryWalletAddress = process.env.NEXT_PUBLIC_TREASURY_WALLET!;
   const solanaRpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_URL!;
+  const envProgramId = process.env.NEXT_PUBLIC_PROGRAM_ID!;
   // Program ID for your custom program that implements purchaseNews.
-  const programId = new PublicKey("6pSR368t3YCLohJs5Kys8TvLWn9iD9rvAsUiXmacQh5");
+  const programId = new PublicKey(envProgramId);
 
-  const sellerWallet = "A29bvmCkMnJWrSLjtuSTh8W8f6yc8vaGseCYDJxhFR3G";
+  const sellerWallet = author_wallet_address;
 
   const handlePurchase = async () => {
     if (!publicKey || !signTransaction) {
       toast.error("Please connect your wallet with signTransaction support.");
       return;
     }
-    setLoading(true);
+    setSolanaLoading(true);
 
     try {
       // Create a connection to your Solana cluster.
@@ -101,8 +104,8 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
           tokenProgram: utils.token.TOKEN_PROGRAM_ID,
         })
         .rpc();
-
-      console.log("Transaction successful. Signature:", txSignature);
+      setSolanaLoading(false);
+      setFluxLoading(true);
 
       // Optionally, call your backend API to record the purchase.
       const response = await fluxApi.post("/api/news/purchase", {
@@ -116,13 +119,15 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
       } else {
         toast.success("News has been purchased!");
         updateNews(newsData);
+        openNewsModal(newsData);
       }
     } catch (err) {
       const errorMessage = (err as Error)?.message || "Transaction error.";
       toast.error(errorMessage);
       console.error("Transaction error: ", err);
     } finally {
-      setLoading(false);
+      setSolanaLoading(false);
+      setFluxLoading(false);
     }
   };
 
@@ -154,7 +159,9 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
       </div>
       <h1 className={`font-bold my-3 flex-grow line-clamp-3 ${isLocked && "blur-md"}`}>{title}</h1>
       <div
-        className={`relative w-full h-48 overflow-hidden rounded-md transition-opacity ${!thumbnail_url ? "bg-white/10" : ""}`}
+        className={`relative w-full h-48 overflow-hidden rounded-md transition-opacity ${
+          !thumbnail_url ? "bg-white/10" : ""
+        }`}
       >
         {/* 🔒 LOCKED */}
         {isLocked && (
@@ -164,14 +171,31 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
               <span>{price}</span>
             </div>
 
-            {loading ? "Processing..." : "BUY NOW"}
+            <div className="mt-2 flex items-center space-x-2">
+              {solanaLoading || fluxLoading ? (
+                <>
+                  <Loader className="fill-white w-5 h-5" />
+                  <span>
+                    {solanaLoading
+                      ? "Processing Solana transaction..."
+                      : fluxLoading
+                        ? "Recording purchase with Flux..."
+                        : ""}
+                  </span>
+                </>
+              ) : (
+                "BUY NOW"
+              )}
+            </div>
           </div>
         )}
 
         <img
           src={thumbnail_url || icon_url || undefined}
           alt={title}
-          className={`absolute inset-0 ${thumbnail_url ? "w-full h-full" : "w-20 h-20"} object-center m-auto object-cover ${isLocked && "blur-md"}`}
+          className={`absolute inset-0 ${
+            thumbnail_url ? "w-full h-full" : "w-20 h-20"
+          } object-center m-auto object-cover ${isLocked && "blur-md"}`}
         />
       </div>
       <div className="flex mt-3 justify-between items-center">

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BiWallet } from "react-icons/bi";
 import { BiNews } from "react-icons/bi";
 import { FiCopy, FiFileText } from "react-icons/fi";
+import { MdSearchOff } from "react-icons/md";
 import { PurchaseSkeleton } from "components/PurchaseSkeleton";
 import fluxApi from "config/axios";
 import dayjs from "dayjs";
@@ -21,7 +22,7 @@ interface Purchase {
   tx_signature: string;
   buyer_user_id: number;
   seller: { username: string; public_address: string };
-  news: { title: string; url: string; price: number };
+  news: { title: string; url: string; price: number; thumbnail_url: string };
 }
 
 const minify = (str: string, sliceLength = 4) => {
@@ -53,7 +54,7 @@ export default function AppPurchases() {
   }, []);
 
   return (
-    <div className="min-h-screen text-gray-100">
+    <div className="text-gray-100">
       <div className="container mx-auto py-10 px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Purchase History</h1>
@@ -63,7 +64,9 @@ export default function AppPurchases() {
         {loading ? (
           <PurchaseSkeleton />
         ) : purchases.length === 0 ? (
-          <div className="text-center text-gray-500">No purchases found.</div>
+          <div className="flex text-center text-gray-500 py-20 justify-center text-xl items-center">
+            <MdSearchOff size={30} className="mt-1 mr-3" /> <span>No purchases found.</span>
+          </div>
         ) : (
           <div className="overflow-x-auto rounded-lg">
             <table className="min-w-full divide-y divide-slate-600 table-fixed">
@@ -110,9 +113,18 @@ export default function AppPurchases() {
               <tbody className="divide-y divide-gray-700 bg-slate-800">
                 {purchases.map((purchase) => (
                   <tr key={purchase.id}>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <div className="flex items-center">
+                    <td className="px-4 py-10 whitespace-nowrap relative overflow-hidden">
+                      <div className="flex items-center opacity-0">
                         <FiFileText className="h-5 w-5 text-gray-400 mr-2" />
+                        <span className="font-medium text-gray-100 max-w-sm truncate">{purchase.news.title}</span>
+                      </div>
+                      <img
+                        src={purchase.news.thumbnail_url}
+                        alt="list-thumb"
+                        className="absolute left-0 top-0 w-full h-full object-cover z-10 opacity-50"
+                      />
+                      <div className="absolute inset-0 flex items-center z-20 pl-5 bg-gradient-to-r to-slate-800 from-transparent ">
+                        <FiFileText className="h-5 w-5 text-gray-200 mr-2" />
                         <span className="font-medium text-gray-100 max-w-sm truncate">{purchase.news.title}</span>
                       </div>
                     </td>

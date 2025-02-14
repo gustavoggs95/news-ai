@@ -16,7 +16,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useNewsStore } from "store/newsStore";
 import { OneNewsResponse } from "types/api";
 import CommentsSection from "./CommentsSection";
-import Loader from "./Loader";
+import NewsModalSkeleton from "./NewsModalSkeleton";
 import RankTag from "./RankTag";
 import Tooltip from "./Tooltip";
 
@@ -81,18 +81,16 @@ export function NewsModal() {
       const routerId = searchParams.get("id");
       const newsId = routerNews || (pathname.includes("/post/") && routerId);
       if (newsId && !isNewsModalOpen) {
+        // Open the modal immediately so that the loader is visible
+        openNewsModal(null);
         setLoading(true);
         try {
           const response = await fluxApi.get(`/api/news/getOne?id=${newsId}`);
           const data: OneNewsResponse = response.data;
-          console.log("data", data);
-
           if (!data.success) {
             throw new Error("News not found");
           }
-
           setNews(data.news);
-          openNewsModal(data.news);
         } catch (err) {
           setError(err instanceof Error ? err.message : "Failed to load news");
           closeNewsModal();
@@ -121,25 +119,24 @@ export function NewsModal() {
       ariaHideApp={false}
     >
       <div className="overflow-hidden flex flex-col flex-1">
-        <div className="flex-1 overflow-auto">
-          <div className="flex justify-between items-center p-4">
-            <div />
-            <h1 className="max-w-[90%] text-2xl font-bold text-white/90 text-center">
-              {news?.title || "News Article"}
-            </h1>
-            <IoMdClose
-              size={26}
-              className="cursor-pointer text-white/80 hover:text-white transition-colors self-baseline mt-1.5"
-              onClick={handleClose}
-            />
-          </div>
+        {isLoading && <NewsModalSkeleton />}
 
-          <div className="w-full p-4 mx-auto space-y-6">
-            {isLoading && <Loader className="mx-auto" />}
+        {error && <div className="text-red-400 text-center">{error}</div>}
+        {!isLoading && !error && news && (
+          <div className="flex-1 overflow-auto">
+            <div className="flex justify-between items-center p-4">
+              <div />
+              <h1 className="max-w-[90%] text-2xl font-bold text-white/90 text-center">
+                {news?.title || "News Article"}
+              </h1>
+              <IoMdClose
+                size={26}
+                className="cursor-pointer text-white/80 hover:text-white transition-colors self-baseline mt-1.5"
+                onClick={handleClose}
+              />
+            </div>
 
-            {error && <div className="text-red-400 text-center">{error}</div>}
-
-            {!isLoading && !error && news && (
+            <div className="w-full p-4 mx-auto space-y-6">
               <>
                 <a
                   href={news.url || undefined}
@@ -207,9 +204,9 @@ export function NewsModal() {
                 </div>
                 <CommentsSection />
               </>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </ReactModal>
   );

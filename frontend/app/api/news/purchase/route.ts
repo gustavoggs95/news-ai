@@ -41,11 +41,17 @@ export async function POST(req: Request) {
 
     // Record the purchase in Supabase.
     const { data: newsData, error: newsError } = await supabase.from("news").select("*").eq("id", newsId).single();
-    console.log("newsData", newsData);
+
     if (newsError) {
       return NextResponse.json({ success: false, error: "Error selecting news" }, { status: 500 });
     }
-
+    console.log("insert parameters", {
+      wallet_address: walletAddress,
+      news_id: newsId,
+      tx_signature: txSignature,
+      buyer_user_id: user!.user_id,
+      seller_user_id: newsData.author_id,
+    });
     // Insert the purchase record into the "news_purchases" table.
     const { error } = await supabase.from("news_purchases").insert([
       {
@@ -59,7 +65,7 @@ export async function POST(req: Request) {
 
     if (error) {
       console.log("error", error.message);
-      return NextResponse.json({ success: false, error: "Error recording purchase" }, { status: 500 });
+      return NextResponse.json({ success: false, error: error.message || "Error recording purchase" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, news: newsData, message: "News purchase recorded" }, { status: 200 });
