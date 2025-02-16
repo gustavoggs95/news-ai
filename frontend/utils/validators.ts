@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import jwt from "jsonwebtoken";
 import { DecodedAuthJwt } from "types/api";
 
@@ -24,4 +25,11 @@ export function authVerifier({ req }: AuthVerifierType): DecodedAuthJwt {
     console.log("JWT validation error:", err);
     throw new Error("Invalid token");
   }
+}
+
+export function getErrorMessage(err: unknown, fallBackMessage?: string): string {
+  const axiosError = (err as AxiosError<{ error: string }>).response?.data?.error;
+  const defaultError = (err as Error)?.message;
+
+  return axiosError || defaultError || fallBackMessage || "Undentified error.";
 }

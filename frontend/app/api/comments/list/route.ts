@@ -23,9 +23,6 @@ export async function GET(req: Request) {
       .eq("news_id", news_id)
       .order("created_at", { ascending: false });
 
-    console.log("COMMENTS  news_id", news_id);
-    console.log("COMMENTS  DATA", data);
-
     if (error) {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

@@ -8,7 +8,7 @@ import { TbArrowBigDown, TbArrowBigUp } from "react-icons/tb";
 import { toast } from "react-toastify";
 import { BN, Idl, utils } from "@project-serum/anchor";
 import { AnchorProvider, Program } from "@project-serum/anchor";
-import { getAssociatedTokenAddress } from "@solana/spl-token";
+import { createTransferCheckedInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import fluxApi from "config/axios";
@@ -16,6 +16,7 @@ import { CardRank, NewsCardProps } from "config/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useNewsStore } from "store/newsStore";
+import { getErrorMessage } from "utils/validators";
 import idl from "../components/idl.json";
 import Loader from "./Loader";
 import RankTag from "./RankTag";
@@ -36,7 +37,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
     author_wallet_address,
     is_own,
   } = newsData;
-  const { publicKey, signAllTransactions, signTransaction } = useWallet();
+  const { publicKey, signAllTransactions, signTransaction, sendTransaction } = useWallet();
   const { openNewsModal } = useNewsStore();
   const [solanaLoading, setSolanaLoading] = useState(false);
   const [fluxLoading, setFluxLoading] = useState(false);
@@ -95,33 +96,65 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
       const seller = new PublicKey(sellerWallet);
       const sellerTokenAccount = await getAssociatedTokenAddress(fluxMint, seller);
 
+      const isUserToAppPurchase = treasuryTokenAccount.equals(sellerTokenAccount);
       // For example, if your token has 9 decimals:
       const decimals = 9;
       const priceValue = price ?? 0;
       // Convert the price into the smallest unit.
       const amount = priceValue * Math.pow(10, decimals);
-      const purchaseAmount = new BN(amount);
 
-      // Call your custom program's purchaseNews instruction.
-      // This instruction deducts a 20% fee and transfers 80% to the seller.
-      const txSignature = await program.methods
-        .purchaseNews(purchaseAmount)
-        .accounts({
-          buyer: publicKey,
-          buyerTokenAccount: buyerTokenAccount,
-          treasuryTokenAccount: treasuryTokenAccount,
-          sellerTokenAccount: sellerTokenAccount,
-          tokenProgram: utils.token.TOKEN_PROGRAM_ID,
-        })
-        .rpc();
+      const purchaseAmount = new BN(amount);
+      let txSignature;
+
+      if (isUserToAppPurchase) {
+        const transferIx = createTransferCheckedInstruction(
+          buyerTokenAccount, // Source token account.
+          fluxMint, // The Flux Coin mint.
+          treasuryTokenAccount, // Destination token account (your treasury).
+          publicKey, // Owner of the source account.
+          amount, // Amount to transfer (in smallest units).
+          decimals, // Number of decimals.
+        );
+
+        // Build the transaction.
+        const transaction = new Transaction().add(transferIx);
+        const latestBlockhash = await connection.getLatestBlockhash();
+        transaction.feePayer = publicKey;
+        transaction.recentBlockhash = latestBlockhash.blockhash;
+
+        // Send the transaction using the wallet adapter.
+        txSignature = await sendTransaction(transaction, connection);
+        await connection.confirmTransaction(
+          {
+            signature: txSignature,
+            blockhash: latestBlockhash.blockhash,
+            lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+          },
+          "confirmed",
+        );
+      } else {
+        // Call your custom program's purchaseNews instruction.
+        // This instruction deducts a 20% fee and transfers 80% to the seller.
+        txSignature = await program.methods
+          .purchaseNews(purchaseAmount)
+          .accounts({
+            buyer: publicKey,
+            buyerTokenAccount: buyerTokenAccount,
+            treasuryTokenAccount: treasuryTokenAccount,
+            sellerTokenAccount: sellerTokenAccount,
+            tokenProgram: utils.token.TOKEN_PROGRAM_ID,
+          })
+          .rpc();
+      }
+
       setSolanaLoading(false);
       setFluxLoading(true);
-
       // Optionally, call your backend API to record the purchase.
       const response = await fluxApi.post("/api/news/purchase", {
         walletAddress: publicKey.toBase58(),
         newsId: newsData.id,
         txSignature,
+        isUserToAppPurchase,
       });
       const data = await response.data;
       if (!data.success) {
@@ -132,7 +165,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
         openNewsModal(newsData);
       }
     } catch (err) {
-      const errorMessage = (err as Error)?.message || "Transaction error.";
+      const errorMessage = getErrorMessage(err);
       toast.error(errorMessage);
       console.error("Transaction error: ", err);
     } finally {
@@ -150,6 +183,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
     >
       <div className="flex justify-between items-center">
         <RankTag rank={rank as CardRank} />
+        <span className="max-w-20 truncate">{author_wallet_address}</span>
         <div className="flex items-center">
           {isHot ? (
             <Tooltip text="Hot News!">
