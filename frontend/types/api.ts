@@ -69,6 +69,7 @@ export type GetNewsData = {
   views: number;
   author_wallet_address: string;
   is_own: boolean;
+  username: string;
 };
 
 export type GetNewsResponse =

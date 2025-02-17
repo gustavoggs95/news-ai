@@ -23,7 +23,7 @@ export default function Comment({ comment: { content, users, created_at } }: { c
             <span className="font-semibold">{walletUserLabel}</span>
             <span className="text-gray-400 text-sm -mt-[0.5px]">{dayjs(created_at).fromNow()}</span>
           </div>
-          <div className="text-gray-300">{content}</div>
+          <div className="text-gray-300 whitespace-pre-wrap break-all">{content}</div>
           <div className="text-gray-200 flex space-x-5 font-semibold">
             <div className="flex items-center cursor-pointer hover:text-gray-100 transition-colors">
               <BiLike size={20} className="mr-1" /> 16

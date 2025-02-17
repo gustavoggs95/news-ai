@@ -20,8 +20,8 @@ export interface NewsData {
 
 export enum CardRank {
   Basic = "Basic",
-  Intermediate = "Intermediate",
-  Advanced = "Advanced",
+  Rising = "Rising",
+  Popular = "Popular",
+  Trending = "Trending",
   Elite = "Elite",
-  Legendary = "Legendary",
 }

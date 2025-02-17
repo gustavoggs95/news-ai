@@ -59,7 +59,6 @@ export type Database = {
           source: string | null;
           views: string | null;
           price: number | null;
-          author_wallet_address: string | null;
         };
         Insert: {
           content?: string | null;
@@ -74,7 +73,6 @@ export type Database = {
           source?: string | null;
           views?: string | null;
           price?: number | null;
-          author_wallet_address: string | null;
         };
         Update: {
           content?: string | null;
@@ -89,7 +87,6 @@ export type Database = {
           source?: string | null;
           views?: string | null;
           price?: number | null;
-          author_wallet_address: string | null;
         };
         Relationships: [];
       };
@@ -377,7 +374,7 @@ export type Database = {
       };
     };
     Enums: {
-      enum_news_rank: "Basic" | "Intermediate" | "Advanced" | "Elite" | "Legendary";
+      enum_news_rank: "Basic" | "Rising" | "Popular" | "Trending" | "Elite";
     };
     CompositeTypes: {
       [_ in never]: never;

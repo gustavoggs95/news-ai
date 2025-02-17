@@ -36,6 +36,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
     icon_url,
     author_wallet_address,
     is_own,
+    username,
   } = newsData;
   const { publicKey, signAllTransactions, signTransaction, sendTransaction } = useWallet();
   const { openNewsModal } = useNewsStore();
@@ -182,23 +183,32 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
       }}
     >
       <div className="flex justify-between items-center">
-        <RankTag rank={rank as CardRank} />
-        <span className="max-w-20 truncate">{author_wallet_address}</span>
-        <div className="flex items-center">
-          {isHot ? (
-            <Tooltip text="Hot News!">
-              <BsFire className="text-red-400" size={20} />
-            </Tooltip>
-          ) : (
-            <div />
-          )}
-          {isLocked ? (
-            <Tooltip text="Locked">
-              <IoMdLock className="text-gray-200" size={22} />
-            </Tooltip>
-          ) : (
-            <div />
-          )}
+        <div className="flex items-center space-x-2">
+          <RankTag rank={rank as CardRank} />
+          <div className="flex items-center">
+            {isHot ? (
+              <Tooltip text="Hot News!">
+                <BsFire className="text-red-400" size={20} />
+              </Tooltip>
+            ) : (
+              <div />
+            )}
+            {isLocked ? (
+              <Tooltip text="Locked">
+                <IoMdLock className="text-gray-200" size={22} />
+              </Tooltip>
+            ) : (
+              <div />
+            )}
+          </div>
+        </div>
+        <div className="flex items-center text-gray-300 space-x-2">
+          <span className="max-w-[115px] truncate">{username || author_wallet_address}</span>
+          <img
+            alt="robohash-profile"
+            className="h-6 w-6 rounded-full border-[0.5px] border-white/20 self-center bg-black/20"
+            src={`https://robohash.org/${author_wallet_address}?size=24x24`}
+          />
         </div>
       </div>
       <h1 className={`font-bold my-3 flex-grow line-clamp-3 ${isLocked && "blur-md"}`}>{title}</h1>

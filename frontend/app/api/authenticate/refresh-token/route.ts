@@ -24,7 +24,17 @@ export async function POST(req: Request) {
       expiresIn: "30d",
     });
 
-    return NextResponse.json({ success: true, token: newToken }, { status: 200 });
+    const response = NextResponse.json({ success: true, token: newToken }, { status: 200 });
+    response.cookies.set({
+      name: "authToken",
+      value: newToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
+    });
+    return response;
   } catch (err) {
     return NextResponse.json({ error: `Invalid or expired token: ${err}` }, { status: 401 });
   }

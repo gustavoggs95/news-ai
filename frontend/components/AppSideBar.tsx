@@ -87,7 +87,7 @@ export default function AppSideBar() {
         <li
           className={`flex items-center transition cursor-pointer hover:bg-gray-700/50 ${pathname === "/app/purchases" && "bg-gray-700/40"}`}
         >
-          <Link href="/app/purchases" className="h-full p-4 w-full flex items-center">
+          <Link href="/app/purchases" className="h-full p-4 w-full flex items-center" prefetch>
             <BiPurchaseTag size={25} className="mr-2" />
             Purchases
           </Link>
@@ -95,7 +95,7 @@ export default function AppSideBar() {
         <li
           className={`flex items-center transition cursor-pointer hover:bg-gray-700/50 ${pathname === "/app/posts" && "bg-gray-700/40"}`}
         >
-          <Link href="/app/posts" className="h-full p-4 w-full flex items-center">
+          <Link href="/app/posts" className="h-full p-4 w-full flex items-center" prefetch>
             <PiNewspaperClipping size={25} className="mr-2" />
             My Posts
           </Link>

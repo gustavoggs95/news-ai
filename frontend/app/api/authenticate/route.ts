@@ -50,7 +50,18 @@ export async function POST(req: Request) {
       const token = jwt.sign({ publicKey, user_id: user.id }, JWT_SECRET, {
         expiresIn: "30d",
       });
-      return NextResponse.json({ success: true, token, user }, { status: 200 });
+
+      const response = NextResponse.json({ success: true, token, user }, { status: 200 });
+      response.cookies.set({
+        name: "authToken",
+        value: token,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        path: "/",
+        maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
+      });
+      return response;
     }
   } catch (error) {
     console.error("Auth error:", error);

@@ -44,7 +44,7 @@ export function ProfileModal() {
     if (!user) {
       return;
     }
-    if (user.username === usersData.username) {
+    if (user.username === usersData.username || !usersData.username) {
       closeProfileModal();
       return;
     }

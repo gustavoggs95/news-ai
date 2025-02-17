@@ -119,7 +119,6 @@ export async function POST(req: Request) {
       content,
       icon_url,
       author_id: decodedToken.user_id,
-      author_wallet_address: decodedToken.publicKey,
     };
 
     const { data, error } = await supabase.from("news").insert([insertParameters]).select();
