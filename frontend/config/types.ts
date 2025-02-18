@@ -7,7 +7,7 @@ import { GetNewsData } from "types/api";
 export interface NewsCardProps {
   index?: number | string;
   newsData: GetNewsData;
-  updateNews: (news: GetNewsData) => void;
+  updateNews: (news: GetNewsData, key: keyof GetNewsData, value: string | boolean | null) => void;
 }
 
 export interface NewsData {

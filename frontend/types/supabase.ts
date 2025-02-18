@@ -90,45 +90,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      transactions: {
-        Row: {
-          amount: number;
-          id: number;
-          news_id: number | null;
-          transaction_date: string | null;
-          user_id: number | null;
-        };
-        Insert: {
-          amount: number;
-          id?: never;
-          news_id?: number | null;
-          transaction_date?: string | null;
-          user_id?: number | null;
-        };
-        Update: {
-          amount?: number;
-          id?: never;
-          news_id?: number | null;
-          transaction_date?: string | null;
-          user_id?: number | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "transactions_news_id_fkey";
-            columns: ["news_id"];
-            isOneToOne: false;
-            referencedRelation: "news";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "transactions_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       users: {
         Row: {
           created_at: string | null;
@@ -471,5 +432,4 @@ export type NewsType = Database["public"]["Tables"]["news"]["Row"];
 export type UsersType = Database["public"]["Tables"]["users"]["Row"];
 export type UsersTypeUpdate = Database["public"]["Tables"]["users"]["Update"];
 export type CommentsType = Database["public"]["Tables"]["comments"]["Row"];
-export type TransactionsType = Database["public"]["Tables"]["transactions"]["Row"];
 export type VotesType = Database["public"]["Tables"]["votes"]["Row"];

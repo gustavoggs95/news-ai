@@ -70,6 +70,7 @@ export type GetNewsData = {
   author_wallet_address: string;
   is_own: boolean;
   username: string;
+  vote_type: string;
 };
 
 export type GetNewsResponse =

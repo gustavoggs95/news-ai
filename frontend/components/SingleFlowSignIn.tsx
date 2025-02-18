@@ -13,7 +13,6 @@ export default function SingleFlowSignIn() {
   const { publicKey, signMessage, connected, disconnect, disconnecting } = useWallet();
   const { login, isAuthenticated, logout, user } = useUserStore();
   const [authLoading, setAuthLoading] = useState(false);
-  const suppressErrorRef = useRef(false);
   const hasSignedRef = useRef(false);
   const previousPublicKey = useRef<string | null>(null);
 
@@ -22,11 +21,9 @@ export default function SingleFlowSignIn() {
     if (!token) return;
 
     try {
-      // Decode the token to check expiration
       const { exp } = jwtDecode<{ exp: number }>(token);
       const currentTime = Math.floor(Date.now() / 1000);
 
-      // If token is expired, remove it
       if (!exp || exp < currentTime) {
         console.log("Token expired, removing.");
         localStorage.removeItem("authToken");
@@ -35,11 +32,8 @@ export default function SingleFlowSignIn() {
         return;
       }
 
-      // If token is valid, set authentication without calling the backend
-
       login(user as UsersType);
 
-      // 2 days in seconds
       if (exp - currentTime < 172800) {
         refreshToken(token);
       }
@@ -86,56 +80,21 @@ export default function SingleFlowSignIn() {
     if (disconnecting) {
       localStorage.removeItem("authToken");
       logout();
-      //hasSignedRef.current = true
     }
   }, [disconnecting, logout]);
 
-  useEffect(() => {
-    const originalConsoleError = console.error;
-    const errorListener = (event: ErrorEvent) => {
-      if (event.message.includes("User rejected")) {
-        event.preventDefault();
-        disconnect();
-      }
-    };
-
-    const rejectionListener = (event: PromiseRejectionEvent) => {
-      if (event.reason?.message?.includes("User rejected")) {
-        event.preventDefault();
-        disconnect();
-      }
-    };
-
-    console.error = (...args) => {
-      if (
-        suppressErrorRef.current &&
-        args.some((a) => a.toString().includes(["User rejected", "Missing or invalid parameters"]))
-      ) {
-        return;
-      }
-      originalConsoleError.apply(console, args);
-    };
-
-    window.addEventListener("error", errorListener);
-    window.addEventListener("unhandledrejection", rejectionListener);
-
-    return () => {
-      console.error = originalConsoleError;
-      window.removeEventListener("error", errorListener);
-      window.removeEventListener("unhandledrejection", rejectionListener);
-      hasSignedRef.current = false;
-    };
-  }, [disconnect]);
-
   const signInWithWallet = useCallback(async () => {
-    suppressErrorRef.current = true;
     try {
       if (!publicKey || !signMessage) {
         console.warn("Wallet not ready for signing");
         return;
       }
 
-      const message = `Sign in to Flux ${Date.now()}`;
+      // Set a flag to prevent other tabs from signing
+      const timestamp = Date.now();
+      localStorage.setItem("signingInProgress", timestamp.toString());
+
+      const message = `Sign in to Flux ${timestamp}`;
       const encodedMessage = new TextEncoder().encode(message);
 
       const signatureBytes = await signMessage(encodedMessage);
@@ -170,8 +129,8 @@ export default function SingleFlowSignIn() {
       }
     } finally {
       setAuthLoading(false);
-      suppressErrorRef.current = false;
       hasSignedRef.current = false;
+      localStorage.removeItem("signingInProgress");
     }
   }, [publicKey, signMessage, login, disconnect]);
 
@@ -179,6 +138,18 @@ export default function SingleFlowSignIn() {
     if (connected && !hasSignedRef.current && !isAuthenticated) {
       hasSignedRef.current = true;
       const timer = setTimeout(() => {
+        // Check if another tab is already signing
+        const signingInProgress = localStorage.getItem("signingInProgress");
+        if (signingInProgress) {
+          const timestamp = parseInt(signingInProgress);
+          // If the signing process is more than 30 seconds old, consider it stale
+          if (Date.now() - timestamp > 30000) {
+            localStorage.removeItem("signingInProgress");
+          } else {
+            // Another tab is handling the signing
+            return;
+          }
+        }
         signInWithWallet().catch(() => {});
       }, 200);
 
@@ -187,29 +158,37 @@ export default function SingleFlowSignIn() {
   }, [connected, signInWithWallet, isAuthenticated]);
 
   const handleAccountChange = useCallback(() => {
-    // Clear existing authentication
     localStorage.removeItem("authToken");
+    localStorage.removeItem("signingInProgress");
     logout();
-
-    // Reset signing flags
     hasSignedRef.current = false;
   }, [logout]);
 
-  // Add this useEffect to detect account changes
   useEffect(() => {
     if (publicKey && isAuthenticated) {
       const currentKey = publicKey.toString();
 
-      // Check if public key has changed
       if (previousPublicKey.current && previousPublicKey.current !== currentKey) {
         console.log("Wallet account changed - requiring reauthentication");
         handleAccountChange();
       }
 
-      // Update previous public key reference
       previousPublicKey.current = currentKey;
     }
   }, [publicKey, isAuthenticated, handleAccountChange]);
+
+  // Listen for storage changes from other tabs (this will fix the change wallet with another tab opened issue)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "authToken" && e.newValue) {
+        checkStoredToken();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>

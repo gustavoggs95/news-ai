@@ -15,6 +15,7 @@ import fluxApi from "config/axios";
 import { CardRank, NewsCardProps } from "config/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { VoteInput } from "pages/api/upvote/route";
 import { useNewsStore } from "store/newsStore";
 import { getErrorMessage } from "utils/validators";
 import idl from "../components/idl.json";
@@ -37,6 +38,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
     author_wallet_address,
     is_own,
     username,
+    vote_type,
   } = newsData;
   const { publicKey, signAllTransactions, signTransaction, sendTransaction } = useWallet();
   const { openNewsModal } = useNewsStore();
@@ -45,8 +47,28 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
   const isHot = dayjs().diff(created_at, "hour") < 24;
   const isLocked = locked && !is_purchased && !is_own;
 
-  const handleUpvoteClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleUpvoteClick = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    voteType: "upvote" | "downvote",
+  ) => {
     e.stopPropagation();
+
+    const voteParameters: VoteInput = {
+      news_id: newsData.id,
+      vote_type: voteType,
+    };
+    try {
+      console.log("newsData", newsData);
+      const newVoteValue = newsData.vote_type === voteType ? null : voteType;
+      updateNews(newsData, "vote_type", newVoteValue);
+
+      const response = await fluxApi.post("/api/upvote", voteParameters);
+      const data = response.data;
+      console.log("Upvote response:", data);
+    } catch (error) {
+      console.log("Upvote error.", error);
+      toast.error(`Vote failed. ${getErrorMessage(error)}`);
+    }
   };
 
   const fluxMintAddress = process.env.NEXT_PUBLIC_FLUX_MINT_ADDRESS!;
@@ -162,7 +184,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
         toast.error(data.error || "Database error.");
       } else {
         toast.success("News has been purchased!");
-        updateNews(newsData);
+        updateNews(newsData, "is_purchased", true);
         openNewsModal(newsData);
       }
     } catch (err) {
@@ -257,8 +279,8 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
           <div className="mr-2 bg-white/10 rounded-md flex">
             <Tooltip text="Upvote">
               <div
-                onClick={handleUpvoteClick}
-                className="rounded-l-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors"
+                onClick={(e) => handleUpvoteClick(e, "upvote")}
+                className={`${vote_type === "upvote" && "bg-green-500/50"} rounded-l-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors`}
               >
                 <TbArrowBigUp size={20} />
               </div>
@@ -266,8 +288,8 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
             <div className="h-full w-[1px] bg-white/10" />
             <Tooltip text="Downvote">
               <div
-                onClick={handleUpvoteClick}
-                className="rounded-r-md px-2 py-1 flex items-center cursor-pointer hover:bg-red-500/50 text-slate-300 hover:text-green-200 transition-colors"
+                onClick={(e) => handleUpvoteClick(e, "downvote")}
+                className={`${vote_type === "downvote" && "bg-red-500/50"} rounded-r-md px-2 py-1 flex items-center cursor-pointer hover:bg-red-500/50 text-slate-300 hover:text-green-200 transition-colors`}
               >
                 <TbArrowBigDown size={20} />
               </div>

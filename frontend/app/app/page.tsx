@@ -58,9 +58,9 @@ export default function AppMain() {
     [loading, hasMore],
   );
 
-  const updateNews = (updatedNews: GetNewsData) => {
+  const updateNews = (updatedNews: GetNewsData, key: keyof GetNewsData, value: string | boolean | null) => {
     setNews((prevNews) =>
-      prevNews.map((newsItem) => (newsItem.id === updatedNews.id ? { ...newsItem, is_purchased: true } : newsItem)),
+      prevNews.map((newsItem) => (newsItem.id === updatedNews.id ? { ...newsItem, [key]: value } : newsItem)),
     );
   };
 
