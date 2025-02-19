@@ -6,6 +6,7 @@ import fluxApi from "config/axios";
 import { NewsVoteProps } from "config/types";
 import { VoteInput } from "pages/api/upvote/route";
 import { useNewsStore } from "store/newsStore";
+import { GetNewsData } from "types/api";
 import { getErrorMessage } from "utils/validators";
 import Tooltip from "./Tooltip";
 
@@ -15,6 +16,28 @@ export default function AppNewsVotes({ newsData, updateNews, isModal }: NewsVote
   const modalNewsData = isModal ? news! : newsData;
   const { updateCurrentNews } = useNewsStore();
   const { vote_type, upvote_count } = modalNewsData;
+
+  function calculateNewUpvoteCount(newsData: GetNewsData, newVoteType: "upvote" | "downvote" | null) {
+    const { vote_type: currentVoteType, upvote_count: currentUpvotes } = newsData;
+
+    // If the new vote is the same as the current vote, no change
+    if (newVoteType === currentVoteType) {
+      return currentUpvotes;
+    }
+
+    // Removing an upvote
+    if (currentVoteType === "upvote" && newVoteType !== "upvote") {
+      return currentUpvotes - 1;
+    }
+
+    // Adding an upvote
+    if (currentVoteType !== "upvote" && newVoteType === "upvote") {
+      return currentUpvotes + 1;
+    }
+
+    // No change in upvotes for other scenarios (e.g., switching between no vote and downvote)
+    return currentUpvotes;
+  }
 
   const handleUpvoteClick = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -28,7 +51,7 @@ export default function AppNewsVotes({ newsData, updateNews, isModal }: NewsVote
     };
     try {
       const newVoteValue = newsData.vote_type === voteType ? null : voteType;
-      const newUpvoteCount = newsData.vote_type === "upvote" ? newsData.upvote_count - 1 : newsData.upvote_count + 1;
+      const newUpvoteCount = calculateNewUpvoteCount(newsData, newVoteValue);
       if (isModal) {
         updateCurrentNews({ vote_type: newVoteValue as string, upvote_count: newUpvoteCount });
       } else {
