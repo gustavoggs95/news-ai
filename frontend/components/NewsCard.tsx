@@ -37,6 +37,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
     author_wallet_address,
     is_own,
     username,
+    comments_count,
   } = newsData;
   const { publicKey, signAllTransactions, signTransaction, sendTransaction } = useWallet();
   const { openNewsModal } = useNewsStore();
@@ -254,6 +255,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
           <Tooltip text="Comments">
             <div className="mr-2 bg-white/10 rounded-md px-2 pb-[.200rem] pt-[.300rem] flex items-center cursor-pointer hover:bg-blue-800 hover:text-blue-200 text-slate-300 transition-colors">
               <BiCommentDetail size={20} />
+              {Boolean(comments_count) && <span className="ml-1.5 mb-1 font-semibold text-xs">{comments_count}</span>}
             </div>
           </Tooltip>
         </div>

@@ -72,6 +72,7 @@ export type GetNewsData = {
   username: string;
   vote_type: string;
   upvote_count: number;
+  comments_count: number;
 };
 
 export type GetNewsResponse =
