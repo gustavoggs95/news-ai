@@ -1,32 +1,28 @@
 import { NextResponse } from "next/server";
 import { createClient } from "utils/supabase/server";
-import { authVerifier } from "utils/validators";
+import { getDecodedToken } from "utils/validators";
 
 export async function GET(req: Request) {
   try {
     // Parse query parameters from the URL
     const { searchParams } = new URL(req.url);
-    const news_id = searchParams.get("news_id");
+    const news_id = Number(searchParams.get("news_id"));
 
     if (!news_id) {
       return NextResponse.json({ success: false, error: "news_id is required" }, { status: 400 });
     }
 
     // Verify authentication; update authVerifier to accept just { req } if needed.
-    authVerifier({ req });
+    const token = getDecodedToken({ req });
 
     const supabase = await createClient();
-
-    const { data, error } = await supabase
-      .from("comments")
-      .select("*, users(username, public_address)")
-      .eq("news_id", news_id)
-      .order("created_at", { ascending: false });
-
+    const { data, error } = await supabase.rpc("get_news_comments", {
+      p_news_id: news_id,
+      p_user_id: token?.user_id,
+    });
     if (error) {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
-
     // Increment view count via an RPC call
     const { error: viewError } = await supabase.rpc("increment_views", { _id: news_id });
 

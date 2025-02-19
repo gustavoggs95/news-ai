@@ -4,7 +4,6 @@ import { useState } from "react";
 import { BiCommentDetail } from "react-icons/bi";
 import { BsFire } from "react-icons/bs";
 import { IoMdLock } from "react-icons/io";
-import { TbArrowBigDown, TbArrowBigUp } from "react-icons/tb";
 import { toast } from "react-toastify";
 import { BN, Idl, utils } from "@project-serum/anchor";
 import { AnchorProvider, Program } from "@project-serum/anchor";
@@ -15,10 +14,10 @@ import fluxApi from "config/axios";
 import { CardRank, NewsCardProps } from "config/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { VoteInput } from "pages/api/upvote/route";
 import { useNewsStore } from "store/newsStore";
 import { getErrorMessage } from "utils/validators";
 import idl from "../components/idl.json";
+import AppNewsVotes from "./AppNewsVotes";
 import Loader from "./Loader";
 import RankTag from "./RankTag";
 import Tooltip from "./Tooltip";
@@ -38,7 +37,6 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
     author_wallet_address,
     is_own,
     username,
-    vote_type,
   } = newsData;
   const { publicKey, signAllTransactions, signTransaction, sendTransaction } = useWallet();
   const { openNewsModal } = useNewsStore();
@@ -46,30 +44,6 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
   const [fluxLoading, setFluxLoading] = useState(false);
   const isHot = dayjs().diff(created_at, "hour") < 24;
   const isLocked = locked && !is_purchased && !is_own;
-
-  const handleUpvoteClick = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    voteType: "upvote" | "downvote",
-  ) => {
-    e.stopPropagation();
-
-    const voteParameters: VoteInput = {
-      news_id: newsData.id,
-      vote_type: voteType,
-    };
-    try {
-      console.log("newsData", newsData);
-      const newVoteValue = newsData.vote_type === voteType ? null : voteType;
-      updateNews(newsData, "vote_type", newVoteValue);
-
-      const response = await fluxApi.post("/api/upvote", voteParameters);
-      const data = response.data;
-      console.log("Upvote response:", data);
-    } catch (error) {
-      console.log("Upvote error.", error);
-      toast.error(`Vote failed. ${getErrorMessage(error)}`);
-    }
-  };
 
   const fluxMintAddress = process.env.NEXT_PUBLIC_FLUX_MINT_ADDRESS!;
   const treasuryWalletAddress = process.env.NEXT_PUBLIC_TREASURY_WALLET!;
@@ -184,7 +158,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
         toast.error(data.error || "Database error.");
       } else {
         toast.success("News has been purchased!");
-        updateNews(newsData, "is_purchased", true);
+        updateNews(newsData, { is_purchased: true });
         openNewsModal(newsData);
       }
     } catch (err) {
@@ -276,25 +250,7 @@ export default function NewsCard({ newsData, updateNews }: NewsCardProps) {
       </div>
       <div className="flex mt-3 justify-between items-center">
         <div className="flex">
-          <div className="mr-2 bg-white/10 rounded-md flex">
-            <Tooltip text="Upvote">
-              <div
-                onClick={(e) => handleUpvoteClick(e, "upvote")}
-                className={`${vote_type === "upvote" && "bg-green-500/50"} rounded-l-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors`}
-              >
-                <TbArrowBigUp size={20} />
-              </div>
-            </Tooltip>
-            <div className="h-full w-[1px] bg-white/10" />
-            <Tooltip text="Downvote">
-              <div
-                onClick={(e) => handleUpvoteClick(e, "downvote")}
-                className={`${vote_type === "downvote" && "bg-red-500/50"} rounded-r-md px-2 py-1 flex items-center cursor-pointer hover:bg-red-500/50 text-slate-300 hover:text-green-200 transition-colors`}
-              >
-                <TbArrowBigDown size={20} />
-              </div>
-            </Tooltip>
-          </div>
+          <AppNewsVotes newsData={newsData} isModal={false} updateNews={updateNews} />
           <Tooltip text="Comments">
             <div className="mr-2 bg-white/10 rounded-md px-2 pb-[.200rem] pt-[.300rem] flex items-center cursor-pointer hover:bg-blue-800 hover:text-blue-200 text-slate-300 transition-colors">
               <BiCommentDetail size={20} />

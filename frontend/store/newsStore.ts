@@ -11,6 +11,7 @@ interface NewsModalStore {
   setNews: (news: GetNewsData | null) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+  updateCurrentNews: (updates: Partial<GetNewsData>) => void;
 }
 
 export const useNewsStore = create<NewsModalStore>((set) => ({
@@ -23,4 +24,8 @@ export const useNewsStore = create<NewsModalStore>((set) => ({
   setNews: (news: GetNewsData | null) => set({ news }),
   setLoading: (loading: boolean) => set({ isLoading: loading }),
   setError: (error: string | null) => set({ error }),
+  updateCurrentNews: (updates: Partial<GetNewsData>) =>
+    set((state) => ({
+      news: state.news ? { ...state.news, ...updates } : null,
+    })),
 }));

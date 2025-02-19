@@ -71,6 +71,7 @@ export type GetNewsData = {
   is_own: boolean;
   username: string;
   vote_type: string;
+  upvote_count: number;
 };
 
 export type GetNewsResponse =

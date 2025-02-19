@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { getDecodedToken } from "utils/validators";
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -14,7 +15,11 @@ export async function GET(req: Request) {
   try {
     const id = parseInt(idParam, 10);
 
-    const { data, error } = await supabase.from("news").select("*").eq("id", id).single();
+    const decodedToken = getDecodedToken({ req });
+    const { data, error } = await supabase.rpc("get_single_news_with_join", {
+      p_buyer_id: decodedToken?.user_id,
+      news_id: id,
+    });
 
     if (error) {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });

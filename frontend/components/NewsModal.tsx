@@ -6,7 +6,6 @@ import { FaEye } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { RxExternalLink } from "react-icons/rx";
-import { TbArrowBigDown, TbArrowBigUp } from "react-icons/tb";
 import ReactModal from "react-modal";
 import fluxApi from "config/axios";
 import { CardRank } from "config/types";
@@ -15,6 +14,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useNewsStore } from "store/newsStore";
 import { OneNewsResponse } from "types/api";
+import AppNewsVotes from "./AppNewsVotes";
 import CommentsSection from "./CommentsSection";
 import NewsModalSkeleton from "./NewsModalSkeleton";
 import RankTag from "./RankTag";
@@ -178,22 +178,7 @@ export function NewsModal() {
                 </div>
 
                 <div className="flex space-x-5 text-gray-400">
-                  <div className="flex">
-                    <div className="bg-white/10 rounded-md flex h-full">
-                      <Tooltip text="Upvote">
-                        <div className="rounded-l-md px-2 py-1 flex items-center cursor-pointer hover:bg-green-500/50 text-slate-300 hover:text-green-200 transition-colors">
-                          <span className="mr-1 font-semibold">19</span>
-                          <TbArrowBigUp size={20} />
-                        </div>
-                      </Tooltip>
-                      <div className="h-full w-[1px] bg-white/10" />
-                      <Tooltip text="Downvote">
-                        <div className="rounded-r-md h-full px-2 py-1 flex items-center cursor-pointer hover:bg-red-500/50 text-slate-300 hover:text-green-200 transition-colors">
-                          <TbArrowBigDown size={20} />
-                        </div>
-                      </Tooltip>
-                    </div>
-                  </div>
+                  <AppNewsVotes newsData={news} isModal />
                   <span className="flex items-center">
                     <FaEye size={20} className="mr-1 mt-0.5" />
                     {news.views} views

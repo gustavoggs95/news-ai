@@ -17,10 +17,10 @@ interface CommentData {
 }
 
 export interface CommentList extends CommentsType {
-  users: {
-    username: string;
-    public_address: string;
-  };
+  username: string;
+  public_address: string;
+  likes_count: number;
+  is_liked: boolean;
 }
 
 export default function CommentsSection() {
